@@ -10,6 +10,7 @@ sys.path.insert(0, parentdir)
 import time
 import logging
 import telebot
+from steam.enums import EResult
 from steam.client import SteamClient
 
 
@@ -18,18 +19,46 @@ from apps import file_manager
 from plugins import strings
 
 
-def setup():
-    client = SteamClient()
-    try:
-        client.login(username=config.STEAM_USERNAME,
-                     password=config.STEAM_PASS)
-
-        check_for_updates(client)
-    except Exception as e:
-        print(f' - Error:\n{e}\n\n\n')
+logging.basicConfig(
+    level=logging.DEBUG, format='%(asctime)s | %(name)s: %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
 
 
-def check_for_updates(client):
+client = SteamClient()
+client.set_credential_location("./csgobetabot/data/creds/")
+
+
+@client.on("error")
+def handle_error(result):
+    print(f"\n> Logon result: {repr(result)}\n")
+
+
+@client.on("channel_secured")
+def send_login():
+    if client.relogin_available:
+        client.relogin()
+
+
+@client.on("connected")
+def handle_connected():
+    print(f"\n> Connected to {client.current_server_addr}\n")
+
+
+@client.on("reconnect")
+def handle_reconnect(delay):
+    print(f"\n> Reconnect in {delay}s...\n")
+
+
+@client.on("disconnected")
+def handle_disconnect():
+    print("\n> Disconnected.\n")
+
+    if client.relogin_available:
+        print("\n> Reconnecting...\n")
+        client.reconnect(maxdelay=30)
+
+
+@client.on("logged_on")
+def handle_after_logon():
     while True:
         try:
             for keys, values in client.get_product_info(apps=[730], timeout=15).items():
@@ -112,7 +141,16 @@ def send_alert(newVal, key):
                                  disable_notification=True)
 
 
-if __name__ == '__main__':
-    logging.basicConfig(
-        level=logging.DEBUG, format='%(asctime)s | %(name)s: %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
-    setup()
+try:
+    result = client.login(username=config.STEAM_USERNAME,
+                     password=config.STEAM_PASS)
+
+    if result != EResult.OK:
+        print(f"\n> Failed to login: {repr(result)}\n")
+        raise SystemExit
+
+    client.run_forever()
+except KeyboardInterrupt:
+    if client.connected:
+        print("\n> Logout\n")
+        client.logout()
