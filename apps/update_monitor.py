@@ -114,5 +114,5 @@ def send_alert(newVal, key):
 
 if __name__ == '__main__':
     logging.basicConfig(
-        level=logging.DEBUG, format='%(asctime)s %(name)s: %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
+        level=logging.DEBUG, format='%(asctime)s | %(name)s: %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
     setup()

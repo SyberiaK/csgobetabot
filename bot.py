@@ -19,7 +19,7 @@ from plugins.addons import translate
 
 bot = telebot.AsyncTeleBot(config.BOT_TOKEN, parse_mode='html')
 telebot.logging.basicConfig(
-    level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    level=logging.DEBUG, format='%(asctime)s | %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
 CIS_lang_codes = ['ru', 'uk', 'be', 'uz', 'kk']
 
 

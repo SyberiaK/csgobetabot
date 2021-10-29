@@ -83,5 +83,5 @@ def send_alert(data, value, link):
 
 if __name__ == '__main__':
     logging.basicConfig(
-        level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
+        level=logging.DEBUG, format='%(asctime)s | %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
     sts_monitor()

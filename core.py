@@ -145,7 +145,7 @@ def send_alert(newVal, key):
 
 if __name__ == '__main__':
     logging.basicConfig(
-        level=logging.DEBUG, format='%(asctime)s %(threadName)s: %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
+        level=logging.DEBUG, format='%(asctime)s | %(threadName)s: %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
 
     t1 = Thread(target=unique_monthly)
     t2 = Thread(target=info_updater)

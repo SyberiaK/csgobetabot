@@ -55,7 +55,7 @@ class CSGOTwitterListener(StreamListener):
 
 if __name__ == '__main__':
     logging.basicConfig(
-        level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
+        level=logging.DEBUG, format='%(asctime)s | %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
     l = CSGOTwitterListener()
     twitterStream = Stream(auth, l)
     twitterStream.filter(follow=[config.CSGO_TWITTER_ID])

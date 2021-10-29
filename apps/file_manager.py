@@ -71,7 +71,6 @@ def updateJson(path, v, k):
     data = json.load(jsonFile)
     jsonFile.close()
 
-    tmp = data[k]
     data[k] = v
 
     jsonFile = open(path, "w+")

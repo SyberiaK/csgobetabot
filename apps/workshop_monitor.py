@@ -101,5 +101,5 @@ def send_alert(text_ru, text_en):
 
 if __name__ == '__main__':
     logging.basicConfig(
-        level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
+        level=logging.DEBUG, format='%(asctime)s | %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
     workshop_monitor()
