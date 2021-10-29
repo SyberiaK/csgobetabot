@@ -19,8 +19,8 @@ from telegraph import Telegraph
 
 from apps import file_manager
 from plugins import strings
-from apps.addons import time_converter
-from apps.addons import translate
+from plugins.addons import time_converter
+from plugins.addons import translate
 import config
 
 
