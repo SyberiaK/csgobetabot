@@ -250,6 +250,7 @@ def ban_info(data):
             communityBan = 'none'
             communityBanR = 'нет'
         if banData['EconomyBan'] == 'banned':
+            tradeBan = 'banned'
             tradeBanR = 'забанен'
         else:
             tradeBan = 'none'
