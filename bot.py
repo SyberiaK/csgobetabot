@@ -1227,6 +1227,10 @@ def default_inline(inline_query):
                           'Бета-версия', 'Сброс ограничений', 'Версия игры']
                 descriptions = ['Проверить доступность серверов', 'Посмотреть количество онлайн игроков', 'Узнать количество онлайн разработчиков',
                                 'Время до сброса ограничений опыта и дропа', 'Проверить последнюю версию игры']
+                dataMOD = []
+                for i in data:
+                    i = i + '\n\nⓘ <b>Информация предоставлена каналом</b> @csgobeta'
+                    dataMOD.append(i)
             else:
                 data = [status_text_en, mm_stats_text_en,
                         devcount_text_en, timer_text_en, gameversion_text_en]
@@ -1234,8 +1238,12 @@ def default_inline(inline_query):
                           'Beta version', 'Drop cap reset', 'Game version']
                 descriptions = ['Check the availability of the servers', 'Check the count of online players', 'Show the count of in-game developers',
                                 'Time left until experience and drop cap reset', 'Check the latest game version']
+                dataMOD = []
+                for i in data:
+                    i = i + '\n\nⓘ <b>Information provided by</b> @csgobeta'
+                    dataMOD.append(i)
             results = []
-            for data, tt, desc, thumb in zip(data, titles, descriptions, thumbs):
+            for data, tt, desc, thumb in zip(dataMOD, titles, descriptions, thumbs):
                 results.append(types.InlineQueryResultArticle(random.randint(0, 9999), tt, input_message_content=types.InputTextMessageContent(
                     data, parse_mode='html'), thumb_url=thumb, description=desc))
             bot.answer_inline_query(inline_query.id, results, cache_time=5)
@@ -1296,14 +1304,22 @@ def inline_dc(inline_query):
                           'Восточноевропейские ДЦ', 'Западноевропейские ДЦ', 'ДЦ северной части США', 'ДЦ южной части США', 'Австралийский ДЦ',
                           'Африканский ДЦ', 'Южноамериканские ДЦ']
                 descriptions = ['Проверить состояние']
+                dataMOD = []
+                for i in data:
+                    i = i + '\n\nⓘ <b>Информация предоставлена каналом</b> @csgobeta'
+                    dataMOD.append(i)
             else:
                 data = [china_text_en, emirates_text_en, hong_kong_text_en, india_text_en, japan_text_en, singapore_text_en, eu_north_text_en,
                         eu_east_text_en, eu_west_text_en, usa_north_text_en, usa_south_text_en, australia_text_en, africa_text_en, south_america_text_en]
                 titles = ['Chinese DC', 'Emirati DC', 'Hong Kongese DC', 'Indian DC', 'Japanese DC', 'Singaporean DC', 'North European DC',
                           'East European DC', 'West European DC', 'Northern USA DC', 'Southern USA DC', 'Australian DC', 'African DC', 'South American DC']
                 descriptions = ['Check the status']
+                dataMOD = []
+                for i in data:
+                    i = i + '\n\nⓘ <b>Information provided by</b> @csgobeta'
+                    dataMOD.append(i)
             results = []
-            for data, tt, desc, thumb, tags in zip(data, titles, descriptions*100, thumbs, tagList):
+            for data, tt, desc, thumb, tags in zip(dataMOD, titles, descriptions*100, thumbs, tagList):
                 for tag in tags:
                     if inline_query.query == tag:
                         results.append(types.InlineQueryResultArticle(random.randint(0, 9999), tt, input_message_content=types.InputTextMessageContent(
