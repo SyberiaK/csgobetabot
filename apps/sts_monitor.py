@@ -63,20 +63,17 @@ def sts_monitor():
 
 
 def send_alert(data, value, link):
-    text_en = strings.notiNewSTS_en.format(value, data, link)
-    text_ru = strings.notiNewSTS_ru.format(value, data, link)
+    text = strings.notiNewSTS_ru.format(value, data, link)
+
     bot = telebot.TeleBot(config.BOT_TOKEN)
     if not config.TEST_MODE:
-        chat_list = [config.CSGOBETACHAT, config.CSGOBETACHAT_EN]
+        chat_list = [config.CSGOBETACHAT]
     else:
         chat_list = [config.AQ]
+
     for chatID in chat_list:
-        if chatID == config.CSGOBETACHAT:
-            msg = bot.send_message(
-                chatID, text_ru, parse_mode='html', disable_web_page_preview=True)
-        else:
-            msg = bot.send_message(
-                chatID, text_en, parse_mode='html', disable_web_page_preview=True)
+        msg = bot.send_message(
+            chatID, text, parse_mode='html', disable_web_page_preview=True)
         bot.pin_chat_message(msg.chat.id, msg.id,
                              disable_notification=True)
 

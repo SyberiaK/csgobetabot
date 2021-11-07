@@ -68,33 +68,24 @@ def workshop_monitor():
                     delta = list(zip(mapNames, newIDS))
                     if len(delta) < 2:
                         for x, y in delta:
-                            text_ru = strings.notiNewMap_ru.format(x, y)
-                            text_en = strings.notiNewMap_en.format(x, y)
+                            text = strings.notiNewMap_ru.format(x, y)
                     else:
                         names = ' и '.join(
                             [', '.join(mapNames[:-1]), mapNames[-1]] if len(mapNames) > 2 else mapNames)
-                        names_en = ' and '.join(
-                            [', '.join(mapNames[:-1]), mapNames[-1]] if len(mapNames) > 2 else mapNames)
-                        text_ru = strings.notiNewMaps_ru.format(names)
-                        text_en = strings.notiNewMaps_en.format(names_en)
-                    send_alert(text_ru, text_en)
+                        text = strings.notiNewMaps_ru.format(names)
+                    send_alert(text)
                     initialIDs = rerunIDs
 
 
-def send_alert(text_ru, text_en):
+def send_alert(text):
     bot = telebot.TeleBot(config.BOT_TOKEN)
     if not config.TEST_MODE:
-        chat_list = [config.CSGOBETACHAT,
-                     config.CSGOBETACHAT_EN, config.CSGONOTIFY, config.AQ]
-        nonpin = [config.CSGONOTIFY, config.AQ]
+        chat_list = [config.CSGOBETACHAT, config.CSGONOTIFY, config.AQ]
     else:
         chat_list = [config.AQ]
     for chatID in chat_list:
-        if chatID == config.CSGOBETACHAT_EN:
-            msg = bot.send_message(chatID, text_en, parse_mode='html')
-        else:
-            msg = bot.send_message(chatID, text_ru, parse_mode='html')
-        if chatID not in nonpin:
+        msg = bot.send_message(chatID, text, parse_mode='html')
+        if chatID == config.CSGOBETACHAT:
             bot.pin_chat_message(msg.chat.id, msg.id,
                                  disable_notification=True)
 

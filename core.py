@@ -124,20 +124,17 @@ def game_version():
 def send_alert(newVal, key):
     bot = telebot.TeleBot(config.BOT_TOKEN)
     if key == 'dev_all_time_peak':
-        text_ru = strings.notiNewDevPeak_ru.format(newVal)
-        text_en = strings.notiNewDevPeak_en.format(newVal)
+        text = strings.notiNewDevPeak_ru.format(newVal)
     else:
-        text_ru = strings.notiNewPlayerPeak_ru.format(newVal)
-        text_en = strings.notiNewPlayerPeak_en.format(newVal)
+        text = strings.notiNewPlayerPeak_ru.format(newVal)
+
     if not config.TEST_MODE:
-        chat_list = [config.CSGOBETACHAT, config.CSGOBETACHAT_EN, config.AQ]
+        chat_list = [config.CSGOBETACHAT, config.AQ]
     else:
         chat_list = [config.AQ]
+
     for chatID in chat_list:
-        if chatID == config.CSGOBETACHAT_EN:
-            msg = bot.send_message(chatID, text_en, parse_mode='html')
-        else:
-            msg = bot.send_message(chatID, text_ru, parse_mode='html')
+        msg = bot.send_message(chatID, text, parse_mode='html')
         if chatID != config.AQ:
             bot.pin_chat_message(msg.chat.id, msg.id,
                                  disable_notification=True)

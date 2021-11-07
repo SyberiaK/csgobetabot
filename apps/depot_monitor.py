@@ -106,37 +106,25 @@ def handle_after_logon():
 
 
 def send_alert(newVal, key):
-    bot = telebot.TeleBot(config.BOT_TOKEN)
     if key == 'public_build_ID':
-        text_ru = strings.notiNewBuild_ru.format(newVal)
-        text_en = strings.notiNewBuild_en.format(newVal)
-        notify_text = strings.notificationTextUPD.format(newVal)
+        text = strings.notificationTextUPD.format(newVal)
     elif key == 'dpr_build_ID':
-        text_ru = strings.notiNewDPRBuild_ru.format(newVal)
-        text_en = strings.notiNewDPRBuild_en.format(newVal)
-        notify_text = strings.notificationTextDPR.format(newVal)
+        text = strings.notificationTextDPR.format(newVal)
     elif key == 'rkvtest':
-        text_ru = strings.rkvTextUPD.format(newVal)
+        text = strings.rkvTextUPD.format(newVal)
     elif key == 'test':
-        text_ru = strings.testTextUPD.format(newVal)
+        text = strings.testTextUPD.format(newVal)
 
+    bot = telebot.TeleBot(config.BOT_TOKEN)
     if not config.TEST_MODE:
-        chat_list = [config.CSGOBETACHAT,
-                     config.CSGOBETACHAT_EN, config.CSGONOTIFY, config.AQ]
-        nonpin = [config.CSGONOTIFY, config.AQ]
-        testpurposes = ['rkvtest', 'test']
+        chat_list = [config.CSGOBETACHAT, config.CSGONOTIFY, config.AQ]
     else:
         chat_list = [config.AQ]
+
     for chatID in chat_list:
+        msg = bot.send_message(
+            chatID, text, parse_mode='html', disable_web_page_preview=True)
         if chatID == config.CSGOBETACHAT:
-            msg = bot.send_message(chatID, text_ru, parse_mode='html')
-        elif chatID == config.CSGONOTIFY:
-            if key not in testpurposes:
-                msg = bot.send_message(chatID, notify_text, parse_mode='html')
-        else:
-            if key not in testpurposes:
-                msg = bot.send_message(chatID, text_en, parse_mode='html')
-        if chatID not in nonpin:
             bot.pin_chat_message(msg.chat.id, msg.id,
                                  disable_notification=True)
 

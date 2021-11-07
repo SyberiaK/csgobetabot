@@ -27,18 +27,16 @@ class CSGOTwitterListener(StreamListener):
         tweet = json.loads(data)
         if 'user' in tweet and tweet['user']['id_str'] == config.CSGO_TWITTER_ID:
             clean_tweet = re.sub(r' http\S+', '', tweet['text'])
-            text_en = strings.notiNewTweet_en.format(clean_tweet, tweet['id'])
-            text_ru = strings.notiNewTweet_ru.format(clean_tweet, tweet['id'])
+            text = strings.notiNewTweet_ru.format(clean_tweet, tweet['id'])
+
+            bot = telebot.TeleBot(config.BOT_TOKEN)
             if not config.TEST_MODE:
-                chat_list = [config.CSGOBETACHAT, config.CSGOBETACHAT_EN]
+                chat_list = [config.CSGOBETACHAT]
             else:
                 chat_list = [config.AQ]
-            bot = telebot.TeleBot(config.BOT_TOKEN)
+
             for chatID in chat_list:
-                if chatID == config.CSGOBETACHAT_EN:
-                    msg = bot.send_message(chatID, text_en, parse_mode='html')
-                else:
-                    msg = bot.send_message(chatID, text_ru, parse_mode='html')
+                msg = bot.send_message(chatID, text, parse_mode='html')
                 bot.pin_chat_message(msg.chat.id, msg.id,
                                     disable_notification=True)
         else:
