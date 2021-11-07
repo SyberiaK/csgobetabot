@@ -67,15 +67,14 @@ def send_alert(data, value, link):
 
     bot = telebot.TeleBot(config.BOT_TOKEN)
     if not config.TEST_MODE:
-        chat_list = [config.CSGOBETACHAT]
+        chatID = config.CSGOBETACHAT
     else:
-        chat_list = [config.AQ]
+        chatID = config.AQ
 
-    for chatID in chat_list:
-        msg = bot.send_message(
-            chatID, text, parse_mode='html', disable_web_page_preview=True)
-        bot.pin_chat_message(msg.chat.id, msg.id,
-                             disable_notification=True)
+    msg = bot.send_message(
+        chatID, text, parse_mode='html', disable_web_page_preview=True)
+    bot.pin_chat_message(msg.chat.id, msg.id,
+                            disable_notification=True)
 
 
 if __name__ == '__main__':

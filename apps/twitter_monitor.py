@@ -31,14 +31,14 @@ class CSGOTwitterListener(StreamListener):
 
             bot = telebot.TeleBot(config.BOT_TOKEN)
             if not config.TEST_MODE:
-                chat_list = [config.CSGOBETACHAT]
+                chatID = config.CSGOBETACHAT
             else:
-                chat_list = [config.AQ]
+                chatID = config.AQ
 
-            for chatID in chat_list:
-                msg = bot.send_message(chatID, text, parse_mode='html')
-                bot.pin_chat_message(msg.chat.id, msg.id,
-                                    disable_notification=True)
+            msg = bot.send_message(chatID, text, parse_mode='html')
+            bot.pin_chat_message(msg.chat.id, msg.id,
+                                disable_notification=True)
+
         else:
             pass
 
