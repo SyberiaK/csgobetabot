@@ -24,7 +24,7 @@ logging.basicConfig(
 
 
 client = SteamClient()
-client.set_credential_location("./csgobetabot/data/creds/")
+client.set_credential_location(config.STEAM_CREDS_PATH)
 
 
 @client.on("error")

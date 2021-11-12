@@ -42,6 +42,9 @@ japanese = ['dc', 'data center', 'data centers', 'дц', 'дата центер'
 singaporean = ['dc', 'data center', 'data centers', 'дц', 'дата центер', 'дата центры', 'дата-центер', 'дата-центры',
                'as', 'asia', 'singapore',
                'азия', 'сингапур']
+south_korean = ['dc', 'data center', 'data centers', 'дц', 'дата центер', 'дата центры', 'дата-центер', 'дата-центры',
+            'as', 'asia', 'south korea', 'seoul',
+            'азия', 'южная корея', 'сеул']
 
 ###
 gun_name_list = ['usp-s', 'p2000', 'glock-18', 'dual berettas', 'p250', 'cz75-auto', 'five-seven', 'tec-9', 'desert eagle', 'r8 revolver',

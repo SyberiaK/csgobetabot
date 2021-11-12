@@ -63,6 +63,7 @@ def workshop_monitor():
 
                     except Exception as e:
                         print(f'\n> Map name error:\n\n{e}\n')
+                        time.sleep(45)
                         continue
 
                     delta = list(zip(mapNames, newIDS))

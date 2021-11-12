@@ -1435,3 +1435,20 @@ def dc_hong_kong():
         load_ru, capacity_ru, tsRCache)
     hong_kong_text_en = strings.dc_hong_kong_en.format(load, capacity, tsCache)
     return hong_kong_text_en, hong_kong_text_ru
+
+
+def dc_south_korea():
+    tsCache, tsRCache = time_converter()[0], time_converter()[1]
+    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    south_korea_dc = cacheFile['datacenters']['South Korea']
+    capacity, load = south_korea_dc['capacity'], south_korea_dc['load']
+    array = [capacity, load]
+    array_ru = []
+    for data in array:
+        data_ru = translate(data)
+        array_ru.append(data_ru)
+    capacity_ru, load_ru = array_ru[0], array_ru[1]
+    south_korea_text_ru = strings.dc_south_korea_ru.format(
+        load_ru, capacity_ru, tsRCache)
+    south_korea_text_en = strings.dc_south_korea_en.format(load, capacity, tsCache)
+    return south_korea_text_en, south_korea_text_ru

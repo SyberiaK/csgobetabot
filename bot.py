@@ -760,6 +760,8 @@ def dc_asia_process(message):
         send_dc_singapore(message)
     elif message.text.lower() == 'hong kong' or message.text.lower() == 'гонконг':
         send_dc_hong_kong(message)
+    elif message.text.lower() == 'south korea' or message.text.lower() == 'южная корея':
+        send_dc_south_korea(message)
     elif message.text == '⏪ Back' or message.text == '⏪ Назад':
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_DC_ru
@@ -950,6 +952,19 @@ def send_dc_hong_kong(message):
         markup = buttons.markup_DC_Asia_ru
     else:
         text = hong_kong_text_en
+        markup = buttons.markup_DC_Asia_en
+    msg = bot.send_message(message.chat.id, text, reply_markup=markup)
+    msg = msg.wait()
+    bot.register_next_step_handler(msg, dc_asia_process)
+
+
+def send_dc_south_korea(message):
+    south_korea_text_en, south_korea_text_ru = get_data.dc_south_korea()
+    if message.from_user.language_code in CIS_lang_codes:
+        text = south_korea_text_ru
+        markup = buttons.markup_DC_Asia_ru
+    else:
+        text = south_korea_text_en
         markup = buttons.markup_DC_Asia_en
     msg = bot.send_message(message.chat.id, text, reply_markup=markup)
     msg = msg.wait()
@@ -1282,6 +1297,7 @@ def inline_dc(inline_query):
         india_text_en, india_text_ru = get_data.dc_india()
         japan_text_en, japan_text_ru = get_data.dc_japan()
         singapore_text_en, singapore_text_ru = get_data.dc_singapore()
+        south_korea_text_en, south_korea_text_ru = get_data.dc_south_korea()
         australia_text_en, australia_text_ru = get_data.dc_australia()
         africa_text_en, africa_text_ru = get_data.dc_africa()
         south_america_text_en, south_america_text_ru = get_data.dc_south_america()
@@ -1290,17 +1306,16 @@ def inline_dc(inline_query):
         if wsCache == 'normal':
             thumbs = ['https://telegra.ph/file/ff0dad30ae32144d7cd0c.jpg', 'https://telegra.ph/file/1de1e51e62b79cae5181a.jpg', 'https://telegra.ph/file/0b209e65c421910419f34.jpg',
                       'https://telegra.ph/file/b2213992b750940113b69.jpg', 'https://telegra.ph/file/11b6601a3e60940d59c88.jpg', 'https://telegra.ph/file/1c2121ceec5d1482173d5.jpg',
-                      'https://telegra.ph/file/4d269cb98aadaae391024.jpg', 'https://telegra.ph/file/4d269cb98aadaae391024.jpg', 'https://telegra.ph/file/4d269cb98aadaae391024.jpg',
-                      'https://telegra.ph/file/06119c30872031d1047d0.jpg', 'https://telegra.ph/file/06119c30872031d1047d0.jpg', 'https://telegra.ph/file/5dc6beef1556ea852284c.jpg',
-                      'https://telegra.ph/file/12628c8193b48302722e8.jpg',
-                      'https://telegra.ph/file/60f8226ea5d72815bef57.jpg']
+                      'https://telegra.ph/file/2265e9728d06632773537.png', 'https://telegra.ph/file/4d269cb98aadaae391024.jpg', 'https://telegra.ph/file/4d269cb98aadaae391024.jpg',
+                      'https://telegra.ph/file/4d269cb98aadaae391024.jpg', 'https://telegra.ph/file/06119c30872031d1047d0.jpg', 'https://telegra.ph/file/06119c30872031d1047d0.jpg',
+                      'https://telegra.ph/file/5dc6beef1556ea852284c.jpg', 'https://telegra.ph/file/12628c8193b48302722e8.jpg', 'https://telegra.ph/file/60f8226ea5d72815bef57.jpg']
             tagList = [tag_list.chinese, tag_list.emirati, tag_list.hong_kongese, tag_list.indian, tag_list.japanese,
-                       tag_list.singaporean, tag_list.north_european, tag_list.east_european, tag_list.west_european,
+                       tag_list.singaporean, tag_list.south_korean, tag_list.north_european, tag_list.east_european, tag_list.west_european,
                        tag_list.northern_usa, tag_list.southern_usa, tag_list.australian, tag_list.african, tag_list.south_american]
             if inline_query.from_user.language_code in CIS_lang_codes:
-                data = [china_text_ru, emirates_text_ru, hong_kong_text_ru, india_text_ru, japan_text_ru, singapore_text_ru, eu_north_text_ru,
+                data = [china_text_ru, emirates_text_ru, hong_kong_text_ru, india_text_ru, japan_text_ru, singapore_text_ru, south_korea_text_ru, eu_north_text_ru,
                         eu_east_text_ru, eu_west_text_ru, usa_north_text_ru, usa_south_text_ru, australia_text_ru, africa_text_ru, south_america_text_ru]
-                titles = ['Китайские ДЦ', 'Эмиратский ДЦ', 'Гонконгский ДЦ', 'Индийские ДЦ', 'Японский ДЦ', 'Сингапурский ДЦ', 'Североевропейский ДЦ',
+                titles = ['Китайские ДЦ', 'Эмиратский ДЦ', 'Гонконгский ДЦ', 'Индийские ДЦ', 'Японский ДЦ', 'Сингапурский ДЦ', 'Южнокорейский ДЦ', 'Североевропейский ДЦ',
                           'Восточноевропейские ДЦ', 'Западноевропейские ДЦ', 'ДЦ северной части США', 'ДЦ южной части США', 'Австралийский ДЦ',
                           'Африканский ДЦ', 'Южноамериканские ДЦ']
                 descriptions = ['Проверить состояние']
@@ -1309,9 +1324,9 @@ def inline_dc(inline_query):
                     i = i + '\n\nⓘ <b>Информация предоставлена каналом</b> @csgobeta'
                     dataMOD.append(i)
             else:
-                data = [china_text_en, emirates_text_en, hong_kong_text_en, india_text_en, japan_text_en, singapore_text_en, eu_north_text_en,
+                data = [china_text_en, emirates_text_en, hong_kong_text_en, india_text_en, japan_text_en, singapore_text_en, south_korea_text_en, eu_north_text_en,
                         eu_east_text_en, eu_west_text_en, usa_north_text_en, usa_south_text_en, australia_text_en, africa_text_en, south_america_text_en]
-                titles = ['Chinese DC', 'Emirati DC', 'Hong Kongese DC', 'Indian DC', 'Japanese DC', 'Singaporean DC', 'North European DC',
+                titles = ['Chinese DC', 'Emirati DC', 'Hong Kongese DC', 'Indian DC', 'Japanese DC', 'Singaporean DC', 'South Korean DC', 'North European DC',
                           'East European DC', 'West European DC', 'Northern USA DC', 'Southern USA DC', 'Australian DC', 'African DC', 'South American DC']
                 descriptions = ['Check the status']
                 dataMOD = []

@@ -55,15 +55,17 @@ markup_DC_en.add(asia_en, australia_en, europe_en,
 
 # DC Asia
 markup_DC_Asia_en = types.ReplyKeyboardMarkup(
-    row_width=3, resize_keyboard=True)
+    row_width=4, resize_keyboard=True)
 india_en = types.KeyboardButton('India')
 emirates_en = types.KeyboardButton('Emirates')
 china_en = types.KeyboardButton('China')
 singapore_en = types.KeyboardButton('Singapore')
 hong_kong_en = types.KeyboardButton('Hong Kong')
 japan_en = types.KeyboardButton('Japan')
-markup_DC_Asia_en.add(china_en, emirates_en, hong_kong_en,
-                      india_en, japan_en, singapore_en, back_button_en)
+south_korea_en = types.KeyboardButton('South Korea')
+markup_DC_Asia_en.add(china_en, emirates_en, hong_kong_en, south_korea_en,
+                      india_en, japan_en, singapore_en)
+markup_DC_Asia_en.add(back_button_en)
 
 # DC Europe
 markup_DC_EU_en = types.ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
@@ -208,15 +210,17 @@ markup_DC_EU_ru.add(eu_East_ru, eu_West_ru, eu_North_ru, back_button_ru)
 
 # DC Asia
 markup_DC_Asia_ru = types.ReplyKeyboardMarkup(
-    row_width=3, resize_keyboard=True)
+    row_width=4, resize_keyboard=True)
 india_ru = types.KeyboardButton('Индия')
 emirates_ru = types.KeyboardButton('Эмираты')
 china_ru = types.KeyboardButton('Китай')
 singapore_ru = types.KeyboardButton('Сингапур')
 hong_kong_ru = types.KeyboardButton('Гонконг')
 japan_ru = types.KeyboardButton('Япония')
-markup_DC_Asia_ru.add(hong_kong_ru, india_ru, china_ru,
-                      singapore_ru, emirates_ru, japan_ru, back_button_ru)
+south_korea_ru = types.KeyboardButton('Южная Корея')
+markup_DC_Asia_ru.add(hong_kong_ru, india_ru, china_ru, south_korea_ru,
+                      singapore_ru, emirates_ru, japan_ru)
+markup_DC_Asia_ru.add(back_button_ru)
 
 # DC USA
 markup_DC_USA_ru = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
