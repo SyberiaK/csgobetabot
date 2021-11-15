@@ -134,18 +134,18 @@ gameversion_ru = '''⚙️ Текущая версия игры: <code>{} ({}/{}
 # English
 url_ex_en = '''📖 Please, enter one of the following options:
         
-• Profile URL (ex: https://steamcommunity.com/id/abitmoony)
-• Steam ID (ex: 76561198346163255)
-• Custom URL (ex: abitmoony)
+• Profile URL (ex: <code>https://steamcommunity.com/id/abitmoony</code> or <code>https://steamcommunity.com/profiles/76561198346163255</code>)
+• Steam ID (ex: <code>76561198346163255</code>)
+• Custom URL (ex: <code>abitmoony</code>)
 
 Use /cancel to cancel this command.'''
 
 # Russian
 url_ex_ru = '''🔗 Пожалуйста, введите один из следующих вариантов:
 
-• Ссылка на профиль (напр.: https://steamcommunity.com/id/abitmoony)
-• Steam ID (напр.: 76561198346163255)
-• Личная ссылка (напр.: abitmoony)
+• Ссылка на профиль (напр.: <code>https://steamcommunity.com/id/abitmoony</code> или <code>https://steamcommunity.com/profiles/76561198346163255</code>)
+• Steam ID (напр.: <code>76561198346163255</code>)
+• Личная ссылка (напр.: <code>abitmoony</code>)
 
 Используйте /cancel, чтобы отменить команду.'''
 
@@ -458,14 +458,10 @@ dev_change_text = '''🔔 В бета-версии CS:GO изменилось к
 # Single
 notiNewMap_ru = '''🆕 Официальный аккаунт CS:GO в Steam загрузил карту <b>{}</b> в Мастерскую для совместимости с будущими версиями игры.
 
-В последующих обновлениях игры стоит ожидать некоторые изменения на данной карте.
-
 🔗 steamcommunity.com/sharedfiles/filedetails/?id={}'''
 
 # Multiple
 notiNewMaps_ru = '''🆕 Официальный аккаунт CS:GO в Steam загрузил карты <b>{}</b> в Мастерскую для совместимости с будущими версиями игры.
-
-В последующих обновлениях игры стоит ожидать некоторые изменения на данных картах.
 
 🔗 steamcommunity.com/profiles/76561198082857351/myworkshopfiles/'''
 

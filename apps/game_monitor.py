@@ -92,7 +92,9 @@ def gc_ready(status):
 
 @client.on("logged_on")
 def handle_after_logon():
+    t1 = Thread(target = depots)
     t1.start()
+    t2 = Thread(target = gc)
     t2.start()
 
 
@@ -234,9 +236,6 @@ def send_alert(newVal, key):
             bot.pin_chat_message(msg.chat.id, msg.id,
                                  disable_notification=True)
 
-
-t1 = Thread(target = depots)
-t2 = Thread(target = gc)
 
 try:
     result = client.login(username=config.STEAM_USERNAME,
