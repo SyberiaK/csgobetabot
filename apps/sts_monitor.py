@@ -28,38 +28,43 @@ def sts_monitor():
             latestPost0, latestPost1, latestPost2 = currentSTS[
                 0].link, currentSTS[1].link, currentSTS[2].link
             latestPosts = [latestPost0, latestPost1, latestPost2]
-            if len(latestPosts) != 0:
-                while True:
-                    try:
-                        newSTS = feedparser.parse(stsgroup_url).entries
-                        newPost0, newPost1, newPost2 = newSTS[0].link, newSTS[1].link, newSTS[2].link
-                        newPosts = [newPost0, newPost1, newPost2]
-                        if len(newPosts) != 0:
-                            if newPosts != latestPosts:
-                                if newPost0 != latestPost0:
-                                    if 'csgo' in newSTS[0].summary_detail.value:
-                                        newStrings = newSTS[0]
-                                        strList = re.findall(
-                                            r'csgo/[\w]+\.txt', newStrings.summary_detail.value)
-                                        cleanList = []
-                                        for i in strList:
-                                            cleanList.append(
-                                                re.sub(r'csgo/', '', i))
-                                        changes = '• ' + '\n• '.join(cleanList)
-                                        numberOfChanges = re.findall(
-                                            r'\d+', newStrings.title)
-                                        numberOfChanges = numberOfChanges[0]
-                                        latestPosts = newPosts
-                                        send_alert(
-                                            changes, numberOfChanges, newStrings.link)
-                        time.sleep(60)
-                    except Exception as e:
-                        print(f' - Error:\n{e}\n\n\n')
-                        time.sleep(60)
-            time.sleep(60)
+
         except Exception as e:
-            print(f' - Error:\n{e}\n\n\n')
-            time.sleep(60)
+            print(f'\n> First run error:\n\n{e}\n')
+            time.sleep(45)
+            continue
+
+        if len(latestPosts) != 0:
+            while True:
+                try:
+                    newSTS = feedparser.parse(stsgroup_url).entries
+                    newPost0, newPost1, newPost2 = newSTS[0].link, newSTS[1].link, newSTS[2].link
+                    newPosts = [newPost0, newPost1, newPost2]
+
+                except Exception as e:
+                    print(f'\n> Second run error:\n\n{e}\n')
+                    time.sleep(45)
+                    continue
+
+                if len(newPosts) != 0:
+                    if newPosts != latestPosts:
+                        if newPost0 != latestPost0:
+                            if 'csgo' in newSTS[0].summary_detail.value:
+                                newStrings = newSTS[0]
+                                strList = re.findall(
+                                    r'csgo/[\w]+\.txt', newStrings.summary_detail.value)
+                                cleanList = []
+                                for i in strList:
+                                    cleanList.append(
+                                        re.sub(r'csgo/', '', i))
+                                changes = '• ' + '\n• '.join(cleanList)
+                                numberOfChanges = re.findall(
+                                    r'\d+', newStrings.title)
+                                numberOfChanges = numberOfChanges[0]
+                                latestPosts = newPosts
+                                send_alert(
+                                    changes, numberOfChanges, newStrings.link)
+                time.sleep(45)
 
 
 def send_alert(data, value, link):

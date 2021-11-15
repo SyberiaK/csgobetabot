@@ -134,18 +134,18 @@ gameversion_ru = '''⚙️ Текущая версия игры: <code>{} ({}/{}
 # English
 url_ex_en = '''📖 Please, enter one of the following options:
         
-• Profile URL (ex: https://steamcommunity.com/id/csgobetaN2)
-• Steam ID (ex: 76561199148006660)
-• Custom URL (ex: csgobetaN1)
+• Profile URL (ex: https://steamcommunity.com/id/abitmoony)
+• Steam ID (ex: 76561198346163255)
+• Custom URL (ex: abitmoony)
 
 Use /cancel to cancel this command.'''
 
 # Russian
 url_ex_ru = '''🔗 Пожалуйста, введите один из следующих вариантов:
 
-• Ссылка на профиль (напр.: https://steamcommunity.com/id/csgobetaN2)
-• Steam ID (напр.: 76561199148006660)
-• Личная ссылка (напр.: csgobetaN1)
+• Ссылка на профиль (напр.: https://steamcommunity.com/id/abitmoony)
+• Steam ID (напр.: 76561198346163255)
+• Личная ссылка (напр.: abitmoony)
 
 Используйте /cancel, чтобы отменить команду.'''
 
@@ -409,7 +409,7 @@ maintenance_ru = '🛠️ Сервера Steam отключены для еже�
 
 ### Text if something is wrong ###
 # English
-wrongBOT_en = '🧐 Sorry, something’s not right. Please try again later.'
+wrongBOT_en = '🧐 Sorry, something went wrong. Please, try again later.'
 
 # Russian
 wrongBOT_ru = '🧐 Извините, что-то не так. Пожалуйста, попробуйте позже.'
@@ -422,7 +422,7 @@ ID новой сборки: <code>{}</code>'''
 
 
 ### Text for new rkvbuild ###
-rkvTextUPD = '''🌋 «RKV»* сборка CS:GO была обновлена.
+notificationTextRKV = '''🌋 Приватная «RKV»* сборка CS:GO была обновлена.
 
 ID новой сборки: <code>{}</code>
 
@@ -430,17 +430,23 @@ ID новой сборки: <code>{}</code>
 
 
 ### Text for new testbuild ###
-testTextUPD = '''🧪 «Test» сборка CS:GO была обновлена.
+notificationTextTST = '''🧪 Приватная «Test» сборка CS:GO была обновлена.
 
 ID новой сборки: <code>{}</code>'''
 
 
 ### Text for new DPR BuildID ###
-notificationTextDPR = '''🔒 «DPR»* сборка CS:GO была обновлена.
+notificationTextDPR = '''🔒 Приватная «DPR»* сборка CS:GO была обновлена.
 
 ID новой сборки: <code>{}</code>
 
 *<i>DPR — developer pre-release</i>'''
+
+
+### Text for DS update ###
+notificationTextDS = '''🖥 Выделенные сервера CS:GO были обновлены.
+
+Номер изменения: <code>{}</code>'''
 
 ### Dev Change Text ###
 dev_change_text = '''🔔 В бета-версии CS:GO изменилось количество разработчиков.
@@ -456,7 +462,7 @@ notiNewMap_ru = '''🆕 Официальный аккаунт CS:GO в Steam з�
 
 🔗 steamcommunity.com/sharedfiles/filedetails/?id={}'''
 
-#Multiple
+# Multiple
 notiNewMaps_ru = '''🆕 Официальный аккаунт CS:GO в Steam загрузил карты <b>{}</b> в Мастерскую для совместимости с будущими версиями игры.
 
 В последующих обновлениях игры стоит ожидать некоторые изменения на данных картах.

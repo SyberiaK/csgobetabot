@@ -64,7 +64,5 @@ class GameVersion:
                 dt, "%b %d %Y %H:%M:%S").timestamp()
 
             return client_version, server_version, patch_version, version_timestamp
-        except:
-            client_version = server_version = version_timestamp = 0
-            patch_version = 'N/A'
-            return client_version, server_version, patch_version, version_timestamp
+        except Exception as e:
+            return e

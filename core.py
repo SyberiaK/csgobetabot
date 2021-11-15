@@ -9,13 +9,12 @@ import config
 from plugins import strings
 from apps import file_manager
 from apps.valve_api import ValveServersAPI
-from apps.scrapper import PeakOnline, Monthly, GameVersion
+from apps.scrapper import PeakOnline, Monthly
 
 
 api = ValveServersAPI()
 peak_count = PeakOnline()
 month_unique = Monthly()
-gv = GameVersion()
 
 
 def info_updater():
@@ -67,58 +66,28 @@ def info_updater():
             time.sleep(40)
 
         except Exception as e:
-            print(f'\n• Error in the main thread:\n{e}\n')
+            print(f'\n> Error in the main thread:\n\n{e}\n')
 
 
 def unique_monthly():
     while True:
-        try:
             print('\nChecking monthly unique players..\n')
+
+            try:
+                newValue = month_unique.get_unique()
+            except Exception as e:
+                print(f'\n> Error while gathering monthly players:\n\n{e}\n')
+                time.sleep(45)
+                continue
+
             cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
             uniqueMonthly = cacheFile['unique_monthly']
-            newValue = month_unique.get_unique()
 
             if newValue != uniqueMonthly:
                 file_manager.updateJson(
                     config.CACHE_FILE_PATH, newValue, 'unique_monthly')
 
             time.sleep(86400)
-        except Exception as e:
-            print(f'\n• Error while gathering monthly players:\n\n{e}\n\n')
-
-
-def game_version():
-    while True:
-        try:
-            cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-            keyList = ['client_version', 'server_version',
-                       'patch_version', 'version_timestamp']
-            oldBuildID, oldVersion = cacheFile['public_build_ID'], cacheFile['client_version']
-            update = True
-
-            print('\nChecking for new verions..\n')
-            time.sleep(60)
-
-            cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-            newBuildID = cacheFile['public_build_ID']
-
-            if newBuildID != oldBuildID:
-                print('\nNew version found..\n')
-                while update:
-                    try:
-                        newValue = gv.get_gameVer()
-                        if newValue[0] != oldVersion:
-                            for val, key in zip(newValue, keyList):
-                                file_manager.updateJson(
-                                    config.CACHE_FILE_PATH, val, key)
-                            update = False
-                        time.sleep(30)
-                    except Exception as e:
-                        print(
-                            f'\n• Error while while gathering new version:\n{e}\n')
-
-        except Exception as e:
-            print(f'\n• Error while checking for new version:\n{e}\n')
 
 
 def send_alert(newVal, key):
@@ -144,10 +113,8 @@ if __name__ == '__main__':
     logging.basicConfig(
         level=logging.DEBUG, format='%(asctime)s | %(threadName)s: %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
 
-    t1 = Thread(target=unique_monthly)
-    t2 = Thread(target=info_updater)
-    t3 = Thread(target=game_version)
+    t1 = Thread(target = unique_monthly)
+    t2 = Thread(target = info_updater)
 
     t1.start()
     t2.start()
-    t3.start()

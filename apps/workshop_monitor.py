@@ -77,6 +77,8 @@ def workshop_monitor():
                     send_alert(text)
                     initialIDs = rerunIDs
 
+                time.sleep(45)
+
 
 def send_alert(text):
     bot = telebot.TeleBot(config.BOT_TOKEN)
