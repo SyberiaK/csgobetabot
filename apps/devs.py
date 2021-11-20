@@ -14,7 +14,7 @@ import telebot
 
 
 import config
-from plugins import strings
+from addons import strings
 
 
 API = f'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid={config.CSGO_BETA_APP_ID}'

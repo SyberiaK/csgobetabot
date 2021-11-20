@@ -15,7 +15,7 @@ import time
 
 
 import config
-from plugins import strings
+from addons import strings
 
 
 auth = OAuthHandler(config.TWITTER_API_KEY, config.TWITTER_API_KEY_S)

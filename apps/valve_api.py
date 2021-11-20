@@ -1,6 +1,5 @@
 import requests
 import config
-from datetime import datetime
 
 
 API_server_status = f'https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.STEAM_API_KEY}'
@@ -14,10 +13,8 @@ class ValveServersAPI:
             response = requests.get(API_server_status)
             if response.status_code == 200:
                 webapi_status = 'normal'
-            elif response.status_code != 200 and datetime.today().weekday() == 1:
-                webapi_status = 'maintenance'
             else:
-                webapi_status = 'N/A'
+                webapi_status = 'unknown'
             result = response.json()['result']
 
             timestamp = result['app']['timestamp']
@@ -35,7 +32,7 @@ class ValveServersAPI:
 
             return webapi_status, sessionsLogon, steam_community, scheduler, timestamp, online_servers, active_players, search_seconds_avg, searching_players, datacenters
         except:
-            webapi_status = scheduler = sessionsLogon = steam_community = datacenters = 'N/A'
+            webapi_status = scheduler = sessionsLogon = steam_community = datacenters = 'unknown'
             timestamp = online_servers = active_players = search_seconds_avg = searching_players = 0
             return webapi_status, sessionsLogon, steam_community, scheduler, timestamp, online_servers, active_players, search_seconds_avg, searching_players, datacenters
 

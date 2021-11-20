@@ -391,20 +391,12 @@ unknownRequest_en = '⚠️ Nothing found, please use of the following buttons:'
 unknownRequest_ru = '⚠️ Ничего не найдено, пожалуйста, воспользуйтесь одной из приведённых кнопок:'
 
 
-### Text for Wrong API ###
+### Text if Steam maintenance ###
 # English
-wrongAPI_en = '💀 Issues with Steam API, please try again later.'
+maintenance_en = '🛠️ <b>Steam is down for routine maintenance every Tuesday.</b>'
 
 # Russian
-wrongAPI_ru = '💀 Проблемы с Steam API, пожалуйста, попробуйте позже.'
-
-
-### Text for Maintenance ###
-# English
-maintenance_en = '🛠️ Steam servers are down for the weekly maintenance, please try again later.'
-
-# Russian
-maintenance_ru = '🛠️ Сервера Steam отключены для еженедельного тех. обслуживания, пожалуйста, попробуйте позже.'
+maintenance_ru = '🛠️ <b>Steam отключается на плановое техобслуживание каждый вторник.</b>'
 
 
 ### Text if something is wrong ###

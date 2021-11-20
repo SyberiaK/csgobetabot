@@ -9,7 +9,6 @@ sys.path.insert(0, parentdir)
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import numpy as np
 import seaborn as sns
 import pandas as pd
 from datetime import datetime
@@ -19,7 +18,7 @@ from html_telegraph_poster.upload_images import upload_image
 
 
 import config
-from apps import file_manager
+from addons import file_manager
 
 
 def graph_maker():

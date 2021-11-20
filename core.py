@@ -1,4 +1,3 @@
-import json
 import logging
 import telebot
 import time
@@ -6,10 +5,10 @@ from threading import Thread
 
 
 import config
-from plugins import strings
-from apps import file_manager
+from addons import strings
+from addons import file_manager
 from apps.valve_api import ValveServersAPI
-from apps.scrapper import PeakOnline, Monthly
+from apps.web import PeakOnline, Monthly
 
 
 api = ValveServersAPI()

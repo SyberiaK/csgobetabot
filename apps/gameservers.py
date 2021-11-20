@@ -20,9 +20,9 @@ import telebot
 
 
 import config
-import file_manager
-from scrapper import GameVersion
-from plugins import strings
+from addons import file_manager
+from web import GameVersion
+from addons import strings
 
 
 logging.basicConfig(
@@ -78,7 +78,7 @@ def gc_ready(status):
     elif status == 4:
         game_coordinator = 'internal Steam error'
     else:
-        game_coordinator = 'N/A'
+        game_coordinator = 'unknown'
 
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     cache_key_list = []

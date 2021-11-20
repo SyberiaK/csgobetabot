@@ -8,13 +8,14 @@ import validators
 
 
 import config
-from plugins import strings
-from plugins import buttons
-from plugins import tag_list
+from addons import strings
+from addons import buttons
+from addons import tags
+from addons import datacenters
+from addons import file_manager
+from addons import util
 from apps import xhair_sharecode
-from apps import get_data
-from apps import file_manager
-from plugins.addons import translate
+from apps import profiles
 
 
 bot = telebot.AsyncTeleBot(config.BOT_TOKEN, parse_mode='html')
@@ -28,22 +29,15 @@ CIS_lang_codes = ['ru', 'uk', 'be', 'uz', 'kk']
 
 def server_stats(message):
     bot.send_chat_action(message.chat.id, 'typing')
-    cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    wsCache = cacheFile['valve_webapi']
-    if wsCache == 'normal':
-        if message.from_user.language_code in CIS_lang_codes:
-            text = '📊 Воспользуйтесь одной из приведённых команд:'
-            markup = buttons.markup_ss_ru
-        else:
-            text = '📊 Use one of the following commands:'
-            markup = buttons.markup_ss_en
-        msg = bot.send_message(message.chat.id, text, reply_markup=markup)
-        msg = msg.wait()
-        bot.register_next_step_handler(msg, server_stats_process)
-    elif wsCache == 'maintenance':
-        send_about_maintenance(message)
+    if message.from_user.language_code in CIS_lang_codes:
+        text = '📊 Воспользуйтесь одной из приведённых команд:'
+        markup = buttons.markup_ss_ru
     else:
-        send_about_problem_valve_api(message)
+        text = '📊 Use one of the following commands:'
+        markup = buttons.markup_ss_en
+    msg = bot.send_message(message.chat.id, text, reply_markup=markup)
+    msg = msg.wait()
+    bot.register_next_step_handler(msg, server_stats_process)
 
 
 def server_stats_process(message):
@@ -72,7 +66,7 @@ def server_stats_process(message):
 def send_server_status(message):
     '''Send the status of CS:GO servers'''
     try:
-        status_text_en, status_text_ru = get_data.server_status()
+        status_text_en, status_text_ru = util.server_status()
         if message.from_user.language_code in CIS_lang_codes:
             text = status_text_ru
             markup = buttons.markup_ss_ru
@@ -90,7 +84,7 @@ def send_server_status(message):
 def send_mm_stats(message):
     '''Send CS:GO matchamaking statistics'''
     try:
-        mm_stats_text_en, mm_stats_text_ru = get_data.mm_stats()
+        mm_stats_text_en, mm_stats_text_ru = util.mm_stats()
         if message.from_user.language_code in CIS_lang_codes:
             text = mm_stats_text_ru
             markup = buttons.markup_ss_ru
@@ -246,7 +240,7 @@ def decode_proccess(message):
 def send_devcount(message):
     '''Send the count of online devs'''
     try:
-        devcount_text_en, devcount_text_ru = get_data.devcount()
+        devcount_text_en, devcount_text_ru = util.devcount()
         if message.from_user.language_code in CIS_lang_codes:
             text = devcount_text_ru
             markup = buttons.markup_extra_ru
@@ -264,7 +258,7 @@ def send_devcount(message):
 def send_timer(message):
     '''Send drop cap reset time'''
     try:
-        timer_text_en, timer_text_ru = get_data.timer()
+        timer_text_en, timer_text_ru = util.timer()
         if message.from_user.language_code in CIS_lang_codes:
             text = timer_text_ru
             markup = buttons.markup_extra_ru
@@ -282,7 +276,7 @@ def send_timer(message):
 def send_gameversion(message):
     '''Send the version of the game'''
     try:
-        gameversion_text_en, gameversion_text_ru = get_data.gameversion()
+        gameversion_text_en, gameversion_text_ru = util.gameversion()
         if message.from_user.language_code in CIS_lang_codes:
             text = gameversion_text_ru
             markup = buttons.markup_extra_ru
@@ -336,10 +330,10 @@ def guns_process(message):
 
 def pistols(message):
     if message.from_user.language_code in CIS_lang_codes:
-        text = '🔫 Выберите пистолет..'
+        text = '🔫 Выберите пистолет:'
         markup = buttons.markup_pistols_ru
     else:
-        text = '🔫 Select the pistol..'
+        text = '🔫 Select the pistol:'
         markup = buttons.markup_pistols_en
     msg = bot.send_message(message.chat.id, text, reply_markup=markup)
     msg = msg.wait()
@@ -349,8 +343,8 @@ def pistols(message):
 def pistols_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() in tag_list.gun_name_list:
-        for gName, gId in zip(tag_list.gun_name_list, tag_list.gun_id_list):
+    if message.text.lower() in tags.gun_name_list:
+        for gName, gId in zip(tags.gun_name_list, tags.gun_id_list):
             if message.text.lower() == gName:
                 send_gun_info(message, gId)
     elif message.text == '⏪ Back' or message.text == '⏪ Назад':
@@ -369,10 +363,10 @@ def pistols_process(message):
 
 def smgs(message):
     if message.from_user.language_code in CIS_lang_codes:
-        text = '🔫 Выберите пистолет-пулемёт..'
+        text = '🔫 Выберите пистолет-пулемёт:'
         markup = buttons.markup_smgs_ru
     else:
-        text = '🔫 Select the SMG..'
+        text = '🔫 Select the SMG:'
         markup = buttons.markup_smgs_en
     msg = bot.send_message(message.chat.id, text, reply_markup=markup)
     msg = msg.wait()
@@ -382,8 +376,8 @@ def smgs(message):
 def smgs_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() in tag_list.gun_name_list:
-        for gName, gId in zip(tag_list.gun_name_list, tag_list.gun_id_list):
+    if message.text.lower() in tags.gun_name_list:
+        for gName, gId in zip(tags.gun_name_list, tags.gun_id_list):
             if message.text.lower() == gName:
                 send_gun_info(message, gId)
     elif message.text == '⏪ Back' or message.text == '⏪ Назад':
@@ -402,10 +396,10 @@ def smgs_process(message):
 
 def rifles(message):
     if message.from_user.language_code in CIS_lang_codes:
-        text = '🔫 Выберите винтовку..'
+        text = '🔫 Выберите винтовку:'
         markup = buttons.markup_rifles_ru
     else:
-        text = '🔫 Select the rifle..'
+        text = '🔫 Select the rifle:'
         markup = buttons.markup_rifles_en
     msg = bot.send_message(message.chat.id, text, reply_markup=markup)
     msg = msg.wait()
@@ -415,8 +409,8 @@ def rifles(message):
 def rifles_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() in tag_list.gun_name_list:
-        for gName, gId in zip(tag_list.gun_name_list, tag_list.gun_id_list):
+    if message.text.lower() in tags.gun_name_list:
+        for gName, gId in zip(tags.gun_name_list, tags.gun_id_list):
             if message.text.lower() == gName:
                 send_gun_info(message, gId)
     elif message.text == '⏪ Back' or message.text == '⏪ Назад':
@@ -435,10 +429,10 @@ def rifles_process(message):
 
 def heavy(message):
     if message.from_user.language_code in CIS_lang_codes:
-        text = '🔫 Выберите тяжёлое оружие..'
+        text = '🔫 Выберите тяжёлое оружие:'
         markup = buttons.markup_heavy_ru
     else:
-        text = '🔫 Select the heavy gun..'
+        text = '🔫 Select the heavy gun:'
         markup = buttons.markup_heavy_en
     msg = bot.send_message(message.chat.id, text, reply_markup=markup)
     msg = msg.wait()
@@ -448,8 +442,8 @@ def heavy(message):
 def heavy_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() in tag_list.gun_name_list:
-        for gName, gId in zip(tag_list.gun_name_list, tag_list.gun_id_list):
+    if message.text.lower() in tags.gun_name_list:
+        for gName, gId in zip(tags.gun_name_list, tags.gun_id_list):
             if message.text.lower() == gName:
                 send_gun_info(message, gId)
     elif message.text == '⏪ Back' or message.text == '⏪ Назад':
@@ -469,7 +463,7 @@ def heavy_process(message):
 def send_gun_info(message, gun_id):
     '''Send archived data about guns'''
     try:
-        gun_data_text_en, gun_data_text_ru = get_data.gun_info(gun_id)
+        gun_data_text_en, gun_data_text_ru = util.gun_info(gun_id)
         if message.from_user.language_code in CIS_lang_codes:
             text = gun_data_text_ru
             markup = buttons.markup_guns_ru
@@ -501,21 +495,19 @@ def profile_info(message):
         msg = bot.send_message(message.chat.id, text, reply_markup=markup)
         msg = msg.wait()
         bot.register_next_step_handler(msg, profile_info_process)
-    elif wsCache == 'maintenance':
-        send_about_maintenance(message)
     else:
-        send_about_problem_valve_api(message)
+        send_about_maintenance(message)
 
 
 def profile_info_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
     if message.text.lower() == 'bans and restrictions' or message.text.lower() == 'запреты и ограничения':
-        temp_id = 'bans'
-        url(message, temp_id)
+        temptag = 'bans'
+        url(message, temptag)
     elif message.text.lower() == 'cs:go in-game statistics' or message.text.lower() == 'игровая статистика cs:go':
-        temp_id = 'stats'
-        url(message, temp_id)
+        temptag = 'stats'
+        url(message, temptag)
     elif message.text == '⏪ Back' or message.text == '⏪ Назад':
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_ru
@@ -530,7 +522,7 @@ def profile_info_process(message):
         unknown_request(message, markup, profile_info_process)
 
 
-def url(message, temp_id):
+def url(message, temptag):
     if message.from_user.language_code in CIS_lang_codes:
         text = strings.url_ex_ru
         markup = buttons.markup_del
@@ -540,13 +532,13 @@ def url(message, temp_id):
     msg = bot.send_message(message.chat.id, text,
                            reply_markup=markup, disable_web_page_preview=True)
     msg = msg.wait()
-    bot.register_next_step_handler(msg, url_process, temp_id)
+    bot.register_next_step_handler(msg, url_process, temptag)
 
 
-def url_process(message, temp_id):
+def url_process(message, temptag):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if temp_id == 'bans':
+    if temptag == 'bans':
         send_bans(message)
     else:
         send_stats(message)
@@ -561,7 +553,7 @@ def send_bans(message):
         cancel(message, markup, profile_info_process)
     else:
         try:
-            bans_text_en, bans_text_ru = get_data.ban_info(message.text)
+            bans_text_en, bans_text_ru = profiles.ban_info(message.text)
             if message.from_user.language_code in CIS_lang_codes:
                 text = bans_text_ru
                 markup = buttons.markup_profile_ru
@@ -586,7 +578,7 @@ def send_stats(message):
         cancel(message, markup, profile_info_process)
     else:
         try:
-            url_en, url_ru = get_data.csgo_stats(message.text)
+            url_en, url_ru = profiles.csgo_stats(message.text)
             if message.from_user.language_code in CIS_lang_codes:
                 text = url_ru
                 markup_share = types.InlineKeyboardMarkup()
@@ -667,10 +659,10 @@ def dc_process(message):
 
 def dc_europe(message):
     if message.from_user.language_code in CIS_lang_codes:
-        text = '📍 Укажите регион..'
+        text = '📍 Укажите регион:'
         markup = buttons.markup_DC_EU_ru
     else:
-        text = '📍 Specify the region..'
+        text = '📍 Specify the region:'
         markup = buttons.markup_DC_EU_en
     msg = bot.send_message(message.chat.id, text, reply_markup=markup)
     msg = msg.wait()
@@ -702,10 +694,10 @@ def dc_europe_process(message):
 
 def dc_usa(message):
     if message.from_user.language_code in CIS_lang_codes:
-        text = '📍 Укажите регион..'
+        text = '📍 Укажите регион:'
         markup = buttons.markup_DC_USA_ru
     else:
-        text = '📍 Specify the region..'
+        text = '📍 Specify the region:'
         markup = buttons.markup_DC_USA_en
     msg = bot.send_message(message.chat.id, text, reply_markup=markup)
     msg = msg.wait()
@@ -735,10 +727,10 @@ def dc_usa_process(message):
 
 def dc_asia(message):
     if message.from_user.language_code in CIS_lang_codes:
-        text = '📍 Укажите страну..'
+        text = '📍 Укажите страну:'
         markup = buttons.markup_DC_Asia_ru
     else:
-        text = '📍 Specify the country..'
+        text = '📍 Specify the country:'
         markup = buttons.markup_DC_Asia_en
     msg = bot.send_message(message.chat.id, text, reply_markup=markup)
     msg = msg.wait()
@@ -777,7 +769,7 @@ def dc_asia_process(message):
 
 
 def send_dc_africa(message):
-    africa_text_en, africa_text_ru = get_data.dc_africa()
+    africa_text_en, africa_text_ru = datacenters.africa()
     if message.from_user.language_code in CIS_lang_codes:
         text = africa_text_ru
         markup = buttons.markup_DC_ru
@@ -790,7 +782,7 @@ def send_dc_africa(message):
 
 
 def send_dc_australia(message):
-    australia_text_en, australia_text_ru = get_data.dc_australia()
+    australia_text_en, australia_text_ru = datacenters.australia()
     if message.from_user.language_code in CIS_lang_codes:
         text = australia_text_ru
         markup = buttons.markup_DC_ru
@@ -803,7 +795,7 @@ def send_dc_australia(message):
 
 
 def send_dc_eu_north(message):
-    eu_north_text_en, eu_north_text_ru = get_data.dc_eu_north()
+    eu_north_text_en, eu_north_text_ru = datacenters.eu_north()
     if message.from_user.language_code in CIS_lang_codes:
         text = eu_north_text_ru
         markup = buttons.markup_DC_EU_ru
@@ -816,7 +808,7 @@ def send_dc_eu_north(message):
 
 
 def send_dc_eu_west(message):
-    eu_west_text_en, eu_west_text_ru = get_data.dc_eu_west()
+    eu_west_text_en, eu_west_text_ru = datacenters.eu_west()
     if message.from_user.language_code in CIS_lang_codes:
         text = eu_west_text_ru
         markup = buttons.markup_DC_EU_ru
@@ -829,7 +821,7 @@ def send_dc_eu_west(message):
 
 
 def send_dc_eu_east(message):
-    eu_east_text_en, eu_east_text_ru = get_data.dc_eu_east()
+    eu_east_text_en, eu_east_text_ru = datacenters.eu_east()
     if message.from_user.language_code in CIS_lang_codes:
         text = eu_east_text_ru
         markup = buttons.markup_DC_EU_ru
@@ -842,7 +834,7 @@ def send_dc_eu_east(message):
 
 
 def send_dc_usa_north(message):
-    usa_north_text_en, usa_north_text_ru = get_data.dc_usa_north()
+    usa_north_text_en, usa_north_text_ru = datacenters.usa_north()
     if message.from_user.language_code in CIS_lang_codes:
         text = usa_north_text_ru
         markup = buttons.markup_DC_USA_ru
@@ -855,7 +847,7 @@ def send_dc_usa_north(message):
 
 
 def send_dc_usa_south(message):
-    usa_south_text_en, usa_south_text_ru = get_data.dc_usa_south()
+    usa_south_text_en, usa_south_text_ru = datacenters.usa_south()
     if message.from_user.language_code in CIS_lang_codes:
         text = usa_south_text_ru
         markup = buttons.markup_DC_USA_ru
@@ -868,7 +860,7 @@ def send_dc_usa_south(message):
 
 
 def send_dc_south_america(message):
-    south_america_text_en, south_america_text_ru = get_data.dc_south_america()
+    south_america_text_en, south_america_text_ru = datacenters.south_america()
     if message.from_user.language_code in CIS_lang_codes:
         text = south_america_text_ru
         markup = buttons.markup_DC_ru
@@ -881,7 +873,7 @@ def send_dc_south_america(message):
 
 
 def send_dc_india(message):
-    india_text_en, india_text_ru = get_data.dc_india()
+    india_text_en, india_text_ru = datacenters.india()
     if message.from_user.language_code in CIS_lang_codes:
         text = india_text_ru
         markup = buttons.markup_DC_Asia_ru
@@ -894,7 +886,7 @@ def send_dc_india(message):
 
 
 def send_dc_japan(message):
-    japan_text_en, japan_text_ru = get_data.dc_japan()
+    japan_text_en, japan_text_ru = datacenters.japan()
     if message.from_user.language_code in CIS_lang_codes:
         text = japan_text_ru
         markup = buttons.markup_DC_Asia_ru
@@ -907,7 +899,7 @@ def send_dc_japan(message):
 
 
 def send_dc_china(message):
-    china_text_en, china_text_ru = get_data.dc_china()
+    china_text_en, china_text_ru = datacenters.china()
     if message.from_user.language_code in CIS_lang_codes:
         text = china_text_ru
         markup = buttons.markup_DC_Asia_ru
@@ -920,7 +912,7 @@ def send_dc_china(message):
 
 
 def send_dc_emirates(message):
-    emirates_text_en, emirates_text_ru = get_data.dc_emirates()
+    emirates_text_en, emirates_text_ru = datacenters.emirates()
     if message.from_user.language_code in CIS_lang_codes:
         text = emirates_text_ru
         markup = buttons.markup_DC_Asia_ru
@@ -933,7 +925,7 @@ def send_dc_emirates(message):
 
 
 def send_dc_singapore(message):
-    singapore_text_en, singapore_text_ru = get_data.dc_singapore()
+    singapore_text_en, singapore_text_ru = datacenters.singapore()
     if message.from_user.language_code in CIS_lang_codes:
         text = singapore_text_ru
         markup = buttons.markup_DC_Asia_ru
@@ -946,7 +938,7 @@ def send_dc_singapore(message):
 
 
 def send_dc_hong_kong(message):
-    hong_kong_text_en, hong_kong_text_ru = get_data.dc_hong_kong()
+    hong_kong_text_en, hong_kong_text_ru = datacenters.hong_kong()
     if message.from_user.language_code in CIS_lang_codes:
         text = hong_kong_text_ru
         markup = buttons.markup_DC_Asia_ru
@@ -959,7 +951,7 @@ def send_dc_hong_kong(message):
 
 
 def send_dc_south_korea(message):
-    south_korea_text_en, south_korea_text_ru = get_data.dc_south_korea()
+    south_korea_text_en, south_korea_text_ru = datacenters.south_korea()
     if message.from_user.language_code in CIS_lang_codes:
         text = south_korea_text_ru
         markup = buttons.markup_DC_Asia_ru
@@ -969,59 +961,6 @@ def send_dc_south_korea(message):
     msg = bot.send_message(message.chat.id, text, reply_markup=markup)
     msg = msg.wait()
     bot.register_next_step_handler(msg, dc_asia_process)
-
-
-### Addons ###
-
-
-def send_about_problem_valve_api(message):
-    '''In case the bot can't get Valve's API'''
-    if message.from_user.language_code in CIS_lang_codes:
-        text = strings.wrongAPI_ru
-        markup = buttons.markup_ru
-    else:
-        text = strings.wrongAPI_en
-        markup = buttons.markup_en
-    bot.send_message(message.chat.id, text, reply_markup=markup)
-
-
-def send_about_maintenance(message):
-    '''In case weekly server update (on Tuesdays)'''
-    if message.from_user.language_code in CIS_lang_codes:
-        text = strings.maintenance_ru
-        markup = buttons.markup_ru
-    else:
-        text = strings.maintenance_en
-        markup = buttons.markup_en
-    bot.send_message(message.chat.id, text, reply_markup=markup)
-
-
-def send_about_problem_valve_api_inline(inline_query):
-    if inline_query.from_user.language_code in CIS_lang_codes:
-        wrong_r = strings.wrongAPI_ru
-        title_un = 'Нет данных'
-        description_un = 'Не получилось связаться с API Valve'
-    else:
-        wrong_r = strings.wrongAPI_en
-        title_un = 'No data'
-        description_un = 'Unable to call Valve API'
-    r = types.InlineQueryResultArticle('1', title_un, input_message_content=types.InputTextMessageContent(
-        wrong_r), thumb_url='https://telegra.ph/file/b9d408e334795b014ee5c.jpg', description=description_un)
-    bot.answer_inline_query(inline_query.id, [r], cache_time=5)
-
-
-def send_about_maintenance_inline(inline_query):
-    if inline_query.from_user.language_code in CIS_lang_codes:
-        maintenance_r = strings.maintenance_ru
-        title_maintenance = 'Нет данных'
-        maintenance = 'Еженедельное тех. обслуживание.'
-    else:
-        maintenance_r = strings.maintenance_en
-        title_maintenance = 'No data'
-        maintenance = 'Weekly maintenance'
-    r = types.InlineQueryResultArticle('1', title_maintenance, input_message_content=types.InputTextMessageContent(
-        maintenance_r), thumb_url='https://telegra.ph/file/6120ece0aab30d8c59d07.jpg', description=maintenance)
-    bot.answer_inline_query(inline_query.id, [r], cache_time=5)
 
 
 def send_about_problem_bot(message):
@@ -1216,6 +1155,16 @@ def unban(message):
                              reply_to_message_id=message.message_id)
 
 
+def send_about_maintenance(message):
+    if message.from_user.language_code in CIS_lang_codes:
+        text = strings.maintenance_ru
+        markup = buttons.markup_ru
+    else:
+        text = strings.maintenance_en
+        markup = buttons.markup_en
+    bot.send_message(message.chat.id, text, reply_markup=markup)
+
+
 ### Inline-mode ###
 
 
@@ -1224,48 +1173,41 @@ def default_inline(inline_query):
     '''Inline mode'''
     log_inline(inline_query)
     try:
-        status_text_en, status_text_ru = get_data.server_status()
-        mm_stats_text_en, mm_stats_text_ru = get_data.mm_stats()
-        devcount_text_en, devcount_text_ru = get_data.devcount()
-        timer_text_en, timer_text_ru = get_data.timer()
-        gameversion_text_en, gameversion_text_ru = get_data.gameversion()
-        cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-        wsCache = cacheFile['valve_webapi']
-        if wsCache == 'normal':
-            thumbs = ['https://telegra.ph/file/8b640b85f6d62f8ed2900.jpg', 'https://telegra.ph/file/57ba2b279c53d69d72481.jpg',
-                      'https://telegra.ph/file/24b05cea99de936fd12bf.jpg', 'https://telegra.ph/file/6948255408689d2f6a472.jpg',
-                      'https://telegra.ph/file/82d8df1e9f5140da70232.jpg']
-            if inline_query.from_user.language_code in CIS_lang_codes:
-                data = [status_text_ru, mm_stats_text_ru,
-                        devcount_text_ru, timer_text_ru, gameversion_text_ru]
-                titles = ['Состояние серверов', 'Статистика ММ',
-                          'Бета-версия', 'Сброс ограничений', 'Версия игры']
-                descriptions = ['Проверить доступность серверов', 'Посмотреть количество онлайн игроков', 'Узнать количество онлайн разработчиков',
-                                'Время до сброса ограничений опыта и дропа', 'Проверить последнюю версию игры']
-                dataMOD = []
-                for i in data:
-                    i = i + '\n\nⓘ <b>Информация предоставлена каналом</b> @csgobeta'
-                    dataMOD.append(i)
-            else:
-                data = [status_text_en, mm_stats_text_en,
-                        devcount_text_en, timer_text_en, gameversion_text_en]
-                titles = ['Server status', 'MM stats',
-                          'Beta version', 'Drop cap reset', 'Game version']
-                descriptions = ['Check the availability of the servers', 'Check the count of online players', 'Show the count of in-game developers',
-                                'Time left until experience and drop cap reset', 'Check the latest game version']
-                dataMOD = []
-                for i in data:
-                    i = i + '\n\nⓘ <b>Information provided by</b> @csgobeta'
-                    dataMOD.append(i)
-            results = []
-            for data, tt, desc, thumb in zip(dataMOD, titles, descriptions, thumbs):
-                results.append(types.InlineQueryResultArticle(random.randint(0, 9999), tt, input_message_content=types.InputTextMessageContent(
-                    data, parse_mode='html'), thumb_url=thumb, description=desc))
-            bot.answer_inline_query(inline_query.id, results, cache_time=5)
-        elif wsCache == 'maintenance':
-            send_about_maintenance_inline(inline_query)
+        status_text_en, status_text_ru = util.server_status()
+        mm_stats_text_en, mm_stats_text_ru = util.mm_stats()
+        devcount_text_en, devcount_text_ru = util.devcount()
+        timer_text_en, timer_text_ru = util.timer()
+        gameversion_text_en, gameversion_text_ru = util.gameversion()
+        thumbs = ['https://telegra.ph/file/8b640b85f6d62f8ed2900.jpg', 'https://telegra.ph/file/57ba2b279c53d69d72481.jpg',
+                    'https://telegra.ph/file/24b05cea99de936fd12bf.jpg', 'https://telegra.ph/file/6948255408689d2f6a472.jpg',
+                    'https://telegra.ph/file/82d8df1e9f5140da70232.jpg']
+        if inline_query.from_user.language_code in CIS_lang_codes:
+            data = [status_text_ru, mm_stats_text_ru,
+                    devcount_text_ru, timer_text_ru, gameversion_text_ru]
+            titles = ['Состояние серверов', 'Статистика ММ',
+                        'Бета-версия', 'Сброс ограничений', 'Версия игры']
+            descriptions = ['Проверить доступность серверов', 'Посмотреть количество онлайн игроков', 'Узнать количество онлайн разработчиков',
+                            'Время до сброса ограничений опыта и дропа', 'Проверить последнюю версию игры']
+            dataMOD = []
+            for i in data:
+                i = i + '\n\nⓘ <b>Информация предоставлена каналом</b> @csgobeta'
+                dataMOD.append(i)
         else:
-            send_about_problem_valve_api_inline(inline_query)
+            data = [status_text_en, mm_stats_text_en,
+                    devcount_text_en, timer_text_en, gameversion_text_en]
+            titles = ['Server status', 'MM stats',
+                        'Beta version', 'Drop cap reset', 'Game version']
+            descriptions = ['Check the availability of the servers', 'Check the count of online players', 'Show the count of in-game developers',
+                            'Time left until experience and drop cap reset', 'Check the latest game version']
+            dataMOD = []
+            for i in data:
+                i = i + '\n\nⓘ <b>Information provided by</b> @csgobeta'
+                dataMOD.append(i)
+        results = []
+        for data, tt, desc, thumb in zip(dataMOD, titles, descriptions, thumbs):
+            results.append(types.InlineQueryResultArticle(random.randint(0, 9999), tt, input_message_content=types.InputTextMessageContent(
+                data, parse_mode='html'), thumb_url=thumb, description=desc))
+        bot.answer_inline_query(inline_query.id, results, cache_time=5)
     except Exception as e:
         bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
 
@@ -1286,64 +1228,57 @@ def share_inline(inline_query):
 def inline_dc(inline_query):
     log_inline(inline_query)
     try:
-        eu_north_text_en, eu_north_text_ru = get_data.dc_eu_north()
-        eu_east_text_en, eu_east_text_ru = get_data.dc_eu_east()
-        eu_west_text_en, eu_west_text_ru = get_data.dc_eu_west()
-        usa_north_text_en, usa_north_text_ru = get_data.dc_usa_north()
-        usa_south_text_en, usa_south_text_ru = get_data.dc_usa_south()
-        china_text_en, china_text_ru = get_data.dc_china()
-        emirates_text_en, emirates_text_ru = get_data.dc_emirates()
-        hong_kong_text_en, hong_kong_text_ru = get_data.dc_hong_kong()
-        india_text_en, india_text_ru = get_data.dc_india()
-        japan_text_en, japan_text_ru = get_data.dc_japan()
-        singapore_text_en, singapore_text_ru = get_data.dc_singapore()
-        south_korea_text_en, south_korea_text_ru = get_data.dc_south_korea()
-        australia_text_en, australia_text_ru = get_data.dc_australia()
-        africa_text_en, africa_text_ru = get_data.dc_africa()
-        south_america_text_en, south_america_text_ru = get_data.dc_south_america()
-        cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-        wsCache = cacheFile['valve_webapi']
-        if wsCache == 'normal':
-            thumbs = ['https://telegra.ph/file/ff0dad30ae32144d7cd0c.jpg', 'https://telegra.ph/file/1de1e51e62b79cae5181a.jpg', 'https://telegra.ph/file/0b209e65c421910419f34.jpg',
-                      'https://telegra.ph/file/b2213992b750940113b69.jpg', 'https://telegra.ph/file/11b6601a3e60940d59c88.jpg', 'https://telegra.ph/file/1c2121ceec5d1482173d5.jpg',
-                      'https://telegra.ph/file/2265e9728d06632773537.png', 'https://telegra.ph/file/4d269cb98aadaae391024.jpg', 'https://telegra.ph/file/4d269cb98aadaae391024.jpg',
-                      'https://telegra.ph/file/4d269cb98aadaae391024.jpg', 'https://telegra.ph/file/06119c30872031d1047d0.jpg', 'https://telegra.ph/file/06119c30872031d1047d0.jpg',
-                      'https://telegra.ph/file/5dc6beef1556ea852284c.jpg', 'https://telegra.ph/file/12628c8193b48302722e8.jpg', 'https://telegra.ph/file/60f8226ea5d72815bef57.jpg']
-            tagList = [tag_list.chinese, tag_list.emirati, tag_list.hong_kongese, tag_list.indian, tag_list.japanese,
-                       tag_list.singaporean, tag_list.south_korean, tag_list.north_european, tag_list.east_european, tag_list.west_european,
-                       tag_list.northern_usa, tag_list.southern_usa, tag_list.australian, tag_list.african, tag_list.south_american]
-            if inline_query.from_user.language_code in CIS_lang_codes:
-                data = [china_text_ru, emirates_text_ru, hong_kong_text_ru, india_text_ru, japan_text_ru, singapore_text_ru, south_korea_text_ru, eu_north_text_ru,
-                        eu_east_text_ru, eu_west_text_ru, usa_north_text_ru, usa_south_text_ru, australia_text_ru, africa_text_ru, south_america_text_ru]
-                titles = ['Китайские ДЦ', 'Эмиратский ДЦ', 'Гонконгский ДЦ', 'Индийские ДЦ', 'Японский ДЦ', 'Сингапурский ДЦ', 'Южнокорейский ДЦ', 'Североевропейский ДЦ',
-                          'Восточноевропейские ДЦ', 'Западноевропейские ДЦ', 'ДЦ северной части США', 'ДЦ южной части США', 'Австралийский ДЦ',
-                          'Африканский ДЦ', 'Южноамериканские ДЦ']
-                descriptions = ['Проверить состояние']
-                dataMOD = []
-                for i in data:
-                    i = i + '\n\nⓘ <b>Информация предоставлена каналом</b> @csgobeta'
-                    dataMOD.append(i)
-            else:
-                data = [china_text_en, emirates_text_en, hong_kong_text_en, india_text_en, japan_text_en, singapore_text_en, south_korea_text_en, eu_north_text_en,
-                        eu_east_text_en, eu_west_text_en, usa_north_text_en, usa_south_text_en, australia_text_en, africa_text_en, south_america_text_en]
-                titles = ['Chinese DC', 'Emirati DC', 'Hong Kongese DC', 'Indian DC', 'Japanese DC', 'Singaporean DC', 'South Korean DC', 'North European DC',
-                          'East European DC', 'West European DC', 'Northern USA DC', 'Southern USA DC', 'Australian DC', 'African DC', 'South American DC']
-                descriptions = ['Check the status']
-                dataMOD = []
-                for i in data:
-                    i = i + '\n\nⓘ <b>Information provided by</b> @csgobeta'
-                    dataMOD.append(i)
-            results = []
-            for data, tt, desc, thumb, tags in zip(dataMOD, titles, descriptions*100, thumbs, tagList):
-                for tag in tags:
-                    if inline_query.query == tag:
-                        results.append(types.InlineQueryResultArticle(random.randint(0, 9999), tt, input_message_content=types.InputTextMessageContent(
-                            data, parse_mode='html'), thumb_url=thumb, description=desc))
-            bot.answer_inline_query(inline_query.id, results, cache_time=5)
-        elif wsCache == 'maintenance':
-            send_about_maintenance_inline(inline_query)
+        eu_north_text_en, eu_north_text_ru = datacenters.eu_north()
+        eu_east_text_en, eu_east_text_ru = datacenters.eu_east()
+        eu_west_text_en, eu_west_text_ru = datacenters.eu_west()
+        usa_north_text_en, usa_north_text_ru = datacenters.usa_north()
+        usa_south_text_en, usa_south_text_ru = datacenters.usa_south()
+        china_text_en, china_text_ru = datacenters.china()
+        emirates_text_en, emirates_text_ru = datacenters.emirates()
+        hong_kong_text_en, hong_kong_text_ru = datacenters.hong_kong()
+        india_text_en, india_text_ru = datacenters.india()
+        japan_text_en, japan_text_ru = datacenters.japan()
+        singapore_text_en, singapore_text_ru = datacenters.singapore()
+        south_korea_text_en, south_korea_text_ru = datacenters.south_korea()
+        australia_text_en, australia_text_ru = datacenters.australia()
+        africa_text_en, africa_text_ru = datacenters.africa()
+        south_america_text_en, south_america_text_ru = datacenters.south_america()
+        thumbs = ['https://telegra.ph/file/ff0dad30ae32144d7cd0c.jpg', 'https://telegra.ph/file/1de1e51e62b79cae5181a.jpg', 'https://telegra.ph/file/0b209e65c421910419f34.jpg',
+                    'https://telegra.ph/file/b2213992b750940113b69.jpg', 'https://telegra.ph/file/11b6601a3e60940d59c88.jpg', 'https://telegra.ph/file/1c2121ceec5d1482173d5.jpg',
+                    'https://telegra.ph/file/2265e9728d06632773537.png', 'https://telegra.ph/file/4d269cb98aadaae391024.jpg', 'https://telegra.ph/file/4d269cb98aadaae391024.jpg',
+                    'https://telegra.ph/file/4d269cb98aadaae391024.jpg', 'https://telegra.ph/file/06119c30872031d1047d0.jpg', 'https://telegra.ph/file/06119c30872031d1047d0.jpg',
+                    'https://telegra.ph/file/5dc6beef1556ea852284c.jpg', 'https://telegra.ph/file/12628c8193b48302722e8.jpg', 'https://telegra.ph/file/60f8226ea5d72815bef57.jpg']
+        tagList = [tags.chinese, tags.emirati, tags.hong_kongese, tags.indian, tags.japanese,
+                    tags.singaporean, tags.south_korean, tags.north_european, tags.east_european, tags.west_european,
+                    tags.northern_usa, tags.southern_usa, tags.australian, tags.african, tags.south_american]
+        if inline_query.from_user.language_code in CIS_lang_codes:
+            data = [china_text_ru, emirates_text_ru, hong_kong_text_ru, india_text_ru, japan_text_ru, singapore_text_ru, south_korea_text_ru, eu_north_text_ru,
+                    eu_east_text_ru, eu_west_text_ru, usa_north_text_ru, usa_south_text_ru, australia_text_ru, africa_text_ru, south_america_text_ru]
+            titles = ['Китайские ДЦ', 'Эмиратский ДЦ', 'Гонконгский ДЦ', 'Индийские ДЦ', 'Японский ДЦ', 'Сингапурский ДЦ', 'Южнокорейский ДЦ', 'Североевропейский ДЦ',
+                        'Восточноевропейские ДЦ', 'Западноевропейские ДЦ', 'ДЦ северной части США', 'ДЦ южной части США', 'Австралийский ДЦ',
+                        'Африканский ДЦ', 'Южноамериканские ДЦ']
+            descriptions = ['Проверить состояние']
+            dataMOD = []
+            for i in data:
+                i = i + '\n\nⓘ <b>Информация предоставлена каналом</b> @csgobeta'
+                dataMOD.append(i)
         else:
-            send_about_problem_valve_api_inline(inline_query)
+            data = [china_text_en, emirates_text_en, hong_kong_text_en, india_text_en, japan_text_en, singapore_text_en, south_korea_text_en, eu_north_text_en,
+                    eu_east_text_en, eu_west_text_en, usa_north_text_en, usa_south_text_en, australia_text_en, africa_text_en, south_america_text_en]
+            titles = ['Chinese DC', 'Emirati DC', 'Hong Kongese DC', 'Indian DC', 'Japanese DC', 'Singaporean DC', 'South Korean DC', 'North European DC',
+                        'East European DC', 'West European DC', 'Northern USA DC', 'Southern USA DC', 'Australian DC', 'African DC', 'South American DC']
+            descriptions = ['Check the status']
+            dataMOD = []
+            for i in data:
+                i = i + '\n\nⓘ <b>Information provided by</b> @csgobeta'
+                dataMOD.append(i)
+        results = []
+        for data, tt, desc, thumb, dctag in zip(dataMOD, titles, descriptions*100, thumbs, tagList):
+            for id in dctag:
+                if inline_query.query == id:
+                    results.append(types.InlineQueryResultArticle(random.randint(0, 9999), tt, input_message_content=types.InputTextMessageContent(
+                        data, parse_mode='html'), thumb_url=thumb, description=desc))
+        bot.answer_inline_query(inline_query.id, results, cache_time=5)
     except Exception as e:
         bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
 

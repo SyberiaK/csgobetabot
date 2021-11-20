@@ -1,11 +1,12 @@
-import time
-from datetime import date, datetime, timedelta
-from apps import file_manager
-
-import config
-
+from datetime import datetime, timedelta
 import pytz
 from babel.dates import format_datetime
+import validators
+
+
+from addons import file_manager
+import config
+
 
 tz = pytz.timezone('UTC')
 tz_valve = pytz.timezone('America/Los_Angeles')
@@ -34,12 +35,24 @@ def time_converter():
 
 def translate(data):
     en_list = ['low', 'medium', 'high', 'full', 'normal', 'surge', 'delayed',
-               'idle', 'offline', 'N/A', 'critical', 'internal server error',
-               'internal bot error', 'reloading', 'internal Steam error']
+               'idle', 'offline', 'critical', 'internal server error',
+               'internal bot error', 'reloading', 'internal Steam error', 'unknown']
     ru_list = ['низкая', 'средняя', 'высокая', 'полная', 'в норме', 'помехи', 'задержка',
-               'бездействие', 'офлайн', 'N/A', 'критическое', 'внутренняя ошибка сервера',
-               'внутренняя ошибка бота', 'перезагрузка', 'внутренняя ошибка Steam']
+               'бездействие', 'офлайн', 'критическое', 'внутренняя ошибка сервера',
+               'внутренняя ошибка бота', 'перезагрузка', 'внутренняя ошибка Steam', 'неизвестно']
     for en, ru in zip(en_list, ru_list):
         if data in en:
             data_ru = ru
             return data_ru
+
+
+def url_checker(data):
+    if data.startswith('steamcommunity'):
+        data = 'https://' + data
+    elif validators.url(data):
+        pass
+    elif data.isdigit() and len(data) == 17:
+        data = f'https://steamcommunity.com/profiles/{data}'
+    else:
+        data = f'https://steamcommunity.com/id/{data}'
+    return data

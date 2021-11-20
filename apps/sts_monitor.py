@@ -15,7 +15,7 @@ import feedparser
 
 
 import config
-from plugins import strings
+from addons import strings
 
 
 stsgroup_url = 'https://steamcommunity.com/groups/STSLounge/rss/'
