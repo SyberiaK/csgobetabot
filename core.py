@@ -5,8 +5,7 @@ from threading import Thread
 
 
 import config
-from addons import strings
-from addons import file_manager
+from addons import strings, file_manager
 from apps.valve_api import ValveServersAPI
 from apps.web import PeakOnline, Monthly
 

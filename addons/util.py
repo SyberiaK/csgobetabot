@@ -11,10 +11,8 @@ import time
 from datetime import datetime
 
 
-from addons import file_manager
-from addons import strings
-from addons.plugins import time_converter
-from addons.plugins import translate
+from addons import file_manager, strings
+from addons.plugins import time_converter, translate
 import config
 
 

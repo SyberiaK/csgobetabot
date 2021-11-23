@@ -20,9 +20,8 @@ import telebot
 
 
 import config
-from addons import file_manager
+from addons import file_manager, strings
 from web import GameVersion
-from addons import strings
 
 
 logging.basicConfig(

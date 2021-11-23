@@ -26,9 +26,10 @@ def time_converter():
     vdRCache = str(format_datetime(datetime.strptime(
         vdCache, '%a, %d %B %Y, %H:%M:%S'), 'EEE, dd MMMM yyyy, HH:mm:ss', locale='ru')).title()
 
-    tsVCache = datetime.now(tz=tz_valve).strftime('%a, %d %B %Y, %H:%M:%S')
+    tsVCache = datetime.now(tz=tz_valve).strftime('%a, %d %B %Y, %H:%M:%S %Z')
+    tempData = tsVCache.rsplit(' ', 1)[0]
     tsVRCache = str(format_datetime(datetime.strptime(
-        tsVCache, '%a, %d %B %Y, %H:%M:%S'), 'EEE, dd MMMM yyyy, HH:mm:ss', locale='ru')).title()
+        tempData, '%a, %d %B %Y, %H:%M:%S'), 'EEE, dd MMMM yyyy, HH:mm:ss', locale='ru')).title() + ' ' + str(tsVCache.split()[-1])
 
     return tsCache, tsRCache, vdCache, vdRCache, tsVCache, tsVRCache
 

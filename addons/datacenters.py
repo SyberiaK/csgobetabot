@@ -1,8 +1,6 @@
 import config
-from addons import file_manager
-from addons import strings
-from addons.plugins import translate
-from addons.plugins import time_converter
+from addons import file_manager, strings
+from addons.plugins import translate, time_converter
 
 
 def africa():

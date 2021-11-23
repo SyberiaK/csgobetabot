@@ -8,14 +8,8 @@ import validators
 
 
 import config
-from addons import strings
-from addons import buttons
-from addons import tags
-from addons import datacenters
-from addons import file_manager
-from addons import util
-from apps import xhair_sharecode
-from apps import profiles
+from addons import strings, buttons, tags, datacenters, file_manager, util
+from apps import xhair_sharecode, profiles
 
 
 bot = telebot.AsyncTeleBot(config.BOT_TOKEN, parse_mode='html')

@@ -97,7 +97,7 @@ devCount_en = '''<a href="{}">⁠‎‎‎</a>🧑‍💻 <b>Beta-version of CS:
 
 Updated on: {} UTC
 
-🏢 Current time at Valve headquarters: {} PDT'''
+🏢 Current time at Valve headquarters: {}'''
 
 # Russian
 devCount_ru = '''<a href="{}">⁠‎‎‎</a>🧑‍💻 <b>Бета-версия CS:GO (ID710):</b>
@@ -107,7 +107,7 @@ devCount_ru = '''<a href="{}">⁠‎‎‎</a>🧑‍💻 <b>Бета-верси
 
 Обновлено: {} UTC
 
-🏢 Текущее время в штаб-квартире Valve: {} PDT'''
+🏢 Текущее время в штаб-квартире Valve: {}'''
 
 
 ### Text for Timer ###
