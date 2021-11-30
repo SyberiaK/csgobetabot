@@ -35,7 +35,13 @@ def info_updater():
 
             for data in [cacheFile['public_build_ID'], cacheFile['dpr_build_ID'], cacheFile['game_coordinator']]:
                 value_list.append(data)
-            for data in overallData[0:9]:
+            for data in overallData[0:4]:
+               value_list.append(data)
+            if overallData[4] < 69420:
+                value_list.append(cacheFile['server_timestamp'])
+            else:
+                value_list.append(overallData[4])
+            for data in overallData[5:9]:
                 value_list.append(data)
             for data in [playerCount, devCount, cacheFile['dev_all_time_peak'], peak_count.get_peak(), cacheFile['peak_all_time'], cacheFile['unique_monthly']]:
                 value_list.append(data)
@@ -43,22 +49,18 @@ def info_updater():
                 value_list.append(data)
             for data in [cacheFile['graph_url'], cacheFile['graph_url2']]:
                 value_list.append(data)
-            for data in overallData[9:10]:
-                value_list.append(data)
+            value_list.append(overallData[9])
 
             for values, cache_values, cache_keys in zip(value_list, cache_value_list, cache_key_list):
                 if values != cache_values:
-                    file_manager.updateJson(
-                        config.CACHE_FILE_PATH, values, cache_keys)
+                    file_manager.updateJson(config.CACHE_FILE_PATH, values, cache_keys)
 
             if playerCount > cacheFile['peak_all_time']:
-                file_manager.updateJson(
-                    config.CACHE_FILE_PATH, playerCount, cache_key_list[16])
+                file_manager.updateJson(config.CACHE_FILE_PATH, playerCount, cache_key_list[16])
                 send_alert(playerCount, cache_key_list[16])
 
             if devCount > cacheFile['dev_all_time_peak']:
-                file_manager.updateJson(
-                    config.CACHE_FILE_PATH, devCount, cache_key_list[14])
+                file_manager.updateJson(config.CACHE_FILE_PATH, devCount, cache_key_list[14])
                 send_alert(devCount, cache_key_list[14])
 
             time.sleep(40)
@@ -82,8 +84,7 @@ def unique_monthly():
             uniqueMonthly = cacheFile['unique_monthly']
 
             if newValue != uniqueMonthly:
-                file_manager.updateJson(
-                    config.CACHE_FILE_PATH, newValue, 'unique_monthly')
+                file_manager.updateJson(config.CACHE_FILE_PATH, newValue, 'unique_monthly')
 
             time.sleep(86400)
 

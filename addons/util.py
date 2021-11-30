@@ -40,24 +40,28 @@ def server_status():
         tick = '✅'
 
     status_text_en = strings.status_en.format(
-        tick, gcCache, slCache, sCache, piCache, wsCache, tsCache)
+        tick, gcCache, slCache, sCache, piCache, wsCache)
     status_text_ru = strings.status_ru.format(
-        tick, gcRCache, slRCache, sRCache, piRCache, wsRCache, tsRCache)
+        tick, gcRCache, slRCache, sRCache, piRCache, wsRCache)
 
-    if (datetime.today().weekday() == 1 and datetime.now().hour > 21) or (datetime.today().weekday() == 2 and datetime.now().hour < 4):
-        status_text_en = status_text_en + '\n\n' + strings.maintenance_en
-        status_text_ru = status_text_ru + '\n\n' + strings.maintenance_ru
+    server_status_text_en = status_text_en + '\n\n' + strings.last_upd_en.format(tsCache)
+    server_status_text_ru = status_text_ru + '\n\n' + strings.last_upd_ru.format(tsRCache)
 
-    return status_text_en, status_text_ru
+    if ((datetime.today().weekday() == 1 and datetime.now().hour > 21) or (datetime.today().weekday() == 2 and datetime.now().hour < 4)) and (gcCache != 'normal' or slCache != 'normal'):
+        server_status_text_en = server_status_text_en + '\n\n' + strings.maintenance_en
+        server_status_text_ru = server_status_text_ru + '\n\n' + strings.maintenance_ru
+
+    return server_status_text_en, server_status_text_ru
 
 
 def mm_stats():
     tsCache, tsRCache = time_converter()[0], time_converter()[1]
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+    gcCache = cacheFile['game_coordinator']
+    slCache = cacheFile['sessionsLogon']
     url = cacheFile['graph_url']
     pcCache, scCache = cacheFile['online_player_count'], cacheFile['online_server_count']
-    apCache, ssCache, spCache = cacheFile['active_player_count'], cacheFile[
-        'search_seconds_avg'], cacheFile['searching_players']
+    apCache, ssCache, spCache = cacheFile['active_player_count'], cacheFile['search_seconds_avg'], cacheFile['searching_players']
     p24Cache, paCache, uqCache = cacheFile['peak_24_hours'], cacheFile['peak_all_time'], cacheFile['unique_monthly']
 
     mm_text_en = strings.mm_en.format(
@@ -66,14 +70,14 @@ def mm_stats():
         url, scCache, pcCache, apCache, spCache, ssCache)
 
     addInf_text_en = strings.additionalInfo_en.format(
-        p24Cache, paCache, uqCache, tsCache)
+        p24Cache, paCache, uqCache)
     addInf_text_ru = strings.additionalInfo_ru.format(
-        p24Cache, paCache, uqCache, tsRCache)
+        p24Cache, paCache, uqCache)
 
-    mm_stats_text_en = mm_text_en + '\n\n' + addInf_text_en
-    mm_stats_text_ru = mm_text_ru + '\n\n' + addInf_text_ru
+    mm_stats_text_en = mm_text_en + '\n\n' + addInf_text_en + '\n\n' + strings.last_upd_en.format(tsCache)
+    mm_stats_text_ru = mm_text_ru + '\n\n' + addInf_text_ru + '\n\n' + strings.last_upd_ru.format(tsRCache)
 
-    if (datetime.today().weekday() == 1 and datetime.now().hour > 21) or (datetime.today().weekday() == 2 and datetime.now().hour < 4):
+    if ((datetime.today().weekday() == 1 and datetime.now().hour > 21) or (datetime.today().weekday() == 2 and datetime.now().hour < 4)) and (gcCache != 'normal' or slCache != 'normal'):
         mm_stats_text_en = mm_stats_text_en + '\n\n' + strings.maintenance_en
         mm_stats_text_ru = mm_stats_text_ru + '\n\n' + strings.maintenance_ru
 

@@ -37,13 +37,13 @@ def server_stats(message):
 def server_stats_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() == 'service status' or message.text.lower() == 'состояние служб':
+    if message.text.lower() in ('service status', 'состояние служб'):
         send_server_status(message)
-    elif message.text.lower() == 'matchmaking status' or message.text.lower() == 'состояние матчмейкинга':
+    elif message.text.lower() in ('matchmaking status', 'состояние матчмейкинга'):
         send_mm_stats(message)
-    elif message.text.lower() == 'dataсenters status' or message.text.lower() == 'состояние дата-центров':
+    elif message.text.lower() in ('dataсenters status', 'состояние дата-центров'):
         dc(message)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_ru
         else:
@@ -112,17 +112,17 @@ def extra_features(message):
 def extra_features_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() == '🆕 crosshair' or message.text.lower() == '🆕 прицел':
+    if message.text.lower() in ('🆕 crosshair', '🆕 прицел'):
         crosshair(message)
-    elif message.text.lower() == 'developers in-game' or message.text.lower() == 'разработчиков в игре':
+    elif message.text.lower() in ('developers in-game', 'разработчиков в игре'):
         send_devcount(message)
-    elif message.text.lower() == 'game version' or message.text.lower() == 'версия игры':
+    elif message.text.lower() in ('game version', 'версия игры'):
         send_gameversion(message)
-    elif message.text.lower() == 'cap reset' or message.text.lower() == 'сброс ограничений':
+    elif message.text.lower() in ('cap reset', 'сброс ограничений'):
         send_timer(message)
-    elif message.text.lower() == 'gun database' or message.text.lower() == 'база данных оружий':
+    elif message.text.lower() in ('gun database', 'база данных оружий'):
         guns(message)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_ru
         else:
@@ -151,11 +151,11 @@ def crosshair(message):
 def crosshair_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() == 'generate' or message.text.lower() == 'создать':
+    if message.text.lower() in ('generate', 'создать'):
         encode(message)
-    elif message.text.lower() == 'decode' or message.text.lower() == 'расшифровать':
+    elif message.text.lower() in ('decode', 'расшифровать'):
         decode(message)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_extra_ru
         else:
@@ -207,25 +207,27 @@ def decode_proccess(message):
             data = xhair_sharecode.decode(message.text)
             if not data:
                 if message.from_user.language_code in CIS_lang_codes:
-                    text = '⚠️ Неверный код.'
-                    markup = buttons.markup_crosshair_ru
+                    text = '⚠️ Неверный код, пожалуйста, попробуйте ещё раз.\n\nИспользуйте /cancel, чтобы отменить команду.'
                 else:
-                    text = '⚠️ Invalid code.'
-                    markup = buttons.markup_crosshair_en
+                    text = '⚠️ Invalid code, please, try again.\n\nUse /cancel to cancel this command.'
+                msg = bot.send_message(message.chat.id, text)
+                msg = msg.wait()
+                bot.register_next_step_handler(msg, decode_proccess)
+                
             else:
                 parameters = ''
                 for x, y in data.items():
                     parameters += x + ' '
                     parameters += str(y) + '; '
                 if message.from_user.language_code in CIS_lang_codes:
-                    text = '🧬 Расшифрованные параметры данного кода прицела:' + '\n\n' + f'<code>{parameters}</code>'
+                    text = '🧬 Расшифрованные параметры данного кода прицела:\n\n' + f'<code>{parameters}</code>'
                     markup = buttons.markup_crosshair_ru
                 else:
-                    text = '🧬 Here are the decoded parameters for the given crosshair code:' + '\n\n' + f'<code>{parameters}</code>'
+                    text = '🧬 Decoded parameters for the given crosshair code:\n\n' + f'<code>{parameters}</code>'
                     markup = buttons.markup_crosshair_en
-            msg = bot.send_message(message.chat.id, text, reply_markup=markup)
-            msg = msg.wait()
-            bot.register_next_step_handler(msg, crosshair_process)
+                msg = bot.send_message(message.chat.id, text, reply_markup=markup)
+                msg = msg.wait()
+                bot.register_next_step_handler(msg, crosshair_process)
         except Exception as e:
             bot.send_message(config.LOGCHANNEL, f'❗️{e}')
             send_about_problem_bot(message)
@@ -300,15 +302,15 @@ def guns(message):
 def guns_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() == 'pistols' or message.text.lower() == 'пистолеты':
+    if message.text.lower() in ('pistols', 'пистолеты'):
         pistols(message)
-    elif message.text.lower() == 'smgs' or message.text.lower() == 'пистолеты-пулемёты':
+    elif message.text.lower() in ('smgs', 'пистолеты-пулемёты'):
         smgs(message)
-    elif message.text.lower() == 'rifles' or message.text.lower() == 'винтовки':
+    elif message.text.lower() in ('rifles', 'винтовки'):
         rifles(message)
-    elif message.text.lower() == 'heavy' or message.text.lower() == 'тяжёлое оружие':
+    elif message.text.lower() in ('heavy', 'тяжёлое оружие'):
         heavy(message)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_extra_ru
         else:
@@ -341,7 +343,7 @@ def pistols_process(message):
         for gName, gId in zip(tags.gun_name_list, tags.gun_id_list):
             if message.text.lower() == gName:
                 send_gun_info(message, gId)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_guns_ru
         else:
@@ -374,7 +376,7 @@ def smgs_process(message):
         for gName, gId in zip(tags.gun_name_list, tags.gun_id_list):
             if message.text.lower() == gName:
                 send_gun_info(message, gId)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_guns_ru
         else:
@@ -407,7 +409,7 @@ def rifles_process(message):
         for gName, gId in zip(tags.gun_name_list, tags.gun_id_list):
             if message.text.lower() == gName:
                 send_gun_info(message, gId)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_guns_ru
         else:
@@ -440,7 +442,7 @@ def heavy_process(message):
         for gName, gId in zip(tags.gun_name_list, tags.gun_id_list):
             if message.text.lower() == gName:
                 send_gun_info(message, gId)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_guns_ru
         else:
@@ -496,13 +498,13 @@ def profile_info(message):
 def profile_info_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() == 'bans and restrictions' or message.text.lower() == 'запреты и ограничения':
+    if message.text.lower() in ('bans and restrictions', 'запреты и ограничения'):
         temptag = 'bans'
         url(message, temptag)
-    elif message.text.lower() == 'cs:go in-game statistics' or message.text.lower() == 'игровая статистика cs:go':
+    elif message.text.lower() in ('cs:go in-game statistics', 'игровая статистика cs:go'):
         temptag = 'stats'
         url(message, temptag)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_ru
         else:
@@ -625,19 +627,19 @@ def dc(message):
 def dc_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() == 'asia' or message.text.lower() == 'азия':
+    if message.text.lower() in ('asia', 'азия'):
         dc_asia(message)
-    elif message.text.lower() == 'south africa' or message.text.lower() == 'южная африка':
+    elif message.text.lower() in ('south africa', 'южная африка'):
         send_dc_africa(message)
-    elif message.text.lower() == 'australia' or message.text.lower() == 'австралия':
+    elif message.text.lower() in ('australia', 'австралия'):
         send_dc_australia(message)
-    elif message.text.lower() == 'europe' or message.text.lower() == 'европа':
+    elif message.text.lower() in ('europe', 'европа'):
         dc_europe(message)
-    elif message.text.lower() == 'usa' or message.text.lower() == 'сша':
+    elif message.text.lower() in ('usa', 'сша'):
         dc_usa(message)
-    elif message.text.lower() == 'south america' or message.text.lower() == 'южная америка':
+    elif message.text.lower() in ('south america', 'южная америка'):
         send_dc_south_america(message)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_ss_ru
         else:
@@ -666,13 +668,13 @@ def dc_europe(message):
 def dc_europe_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() == 'north' or message.text.lower() == 'север':
+    if message.text.lower() in ('north', 'север'):
         send_dc_eu_north(message)
-    elif message.text.lower() == 'east' or message.text.lower() == 'восток':
+    elif message.text.lower() in ('east', 'восток'):
         send_dc_eu_east(message)
-    elif message.text.lower() == 'west' or message.text.lower() == 'запад':
+    elif message.text.lower() in ('west', 'запад'):
         send_dc_eu_west(message)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_DC_ru
         else:
@@ -701,11 +703,11 @@ def dc_usa(message):
 def dc_usa_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() == 'north' or message.text.lower() == 'север':
+    if message.text.lower() in ('north', 'север'):
         send_dc_usa_north(message)
-    elif message.text.lower() == 'south' or message.text.lower() == 'юг':
+    elif message.text.lower() in ('south', 'юг'):
         send_dc_usa_south(message)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_DC_ru
         else:
@@ -734,21 +736,21 @@ def dc_asia(message):
 def dc_asia_process(message):
     bot.send_chat_action(message.chat.id, 'typing')
     log(message)
-    if message.text.lower() == 'india' or message.text.lower() == 'индия':
+    if message.text.lower() in ('india', 'индия'):
         send_dc_india(message)
-    elif message.text.lower() == 'japan' or message.text.lower() == 'япония':
+    elif message.text.lower() in ('japan', 'япония'):
         send_dc_japan(message)
-    elif message.text.lower() == 'china' or message.text.lower() == 'китай':
+    elif message.text.lower() in ('china', 'китай'):
         send_dc_china(message)
-    elif message.text.lower() == 'emirates' or message.text.lower() == 'эмираты':
+    elif message.text.lower() in ('emirates', 'эмираты'):
         send_dc_emirates(message)
-    elif message.text.lower() == 'singapore' or message.text.lower() == 'сингапур':
+    elif message.text.lower() in ('singapore', 'сингапур'):
         send_dc_singapore(message)
-    elif message.text.lower() == 'hong kong' or message.text.lower() == 'гонконг':
+    elif message.text.lower() in ('hong kong', 'гонконг'):
         send_dc_hong_kong(message)
-    elif message.text.lower() == 'south korea' or message.text.lower() == 'южная корея':
+    elif message.text.lower() in ('south korea', 'южная корея'):
         send_dc_south_korea(message)
-    elif message.text == '⏪ Back' or message.text == '⏪ Назад':
+    elif message.text in ('⏪ Back', '⏪ Назад'):
         if message.from_user.language_code in CIS_lang_codes:
             markup = buttons.markup_DC_ru
         else:

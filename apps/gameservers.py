@@ -102,8 +102,8 @@ def depots():
         try:
             for keys, values in client.get_product_info(apps=[730], timeout=15).items():
                 for k, v in values.items():
-                    currentPublicBuild = v['depots']['branches']['public']['buildid']
                     currentDPRBuild = v['depots']['branches']['dpr']['buildid']
+                    currentPublicBuild = v['depots']['branches']['public']['buildid']
                     try:
                         currentRKVBuild = v['depots']['branches']['rkvtest']['buildid']
                     except Exception as e:
@@ -123,19 +123,19 @@ def depots():
         for keys, values in cacheFile.items():
             cache_key_list.append(keys)
 
-        if currentPublicBuild != cacheFile['public_build_ID']:
-            file_manager.updateJson(
-                config.CACHE_FILE_PATH, currentPublicBuild, cache_key_list[0])
-            send_alert(currentPublicBuild, cache_key_list[0])
-            t4 = Thread(target = gv_updater)
-            t4.start()
-
         if currentDPRBuild != cacheFile['dpr_build_ID']:
             file_manager.updateJson(
                 config.CACHE_FILE_PATH, currentDPRBuild, cache_key_list[1])
             send_alert(currentDPRBuild, cache_key_list[1])
             t3 = Thread(target = ds)
             t3.start()
+
+        if currentPublicBuild != cacheFile['public_build_ID']:
+            file_manager.updateJson(
+                config.CACHE_FILE_PATH, currentPublicBuild, cache_key_list[0])
+            send_alert(currentPublicBuild, cache_key_list[0])
+            t4 = Thread(target = gv_updater)
+            t4.start()
 
         if currentRKVBuild != cacheFile['rkvtest']:
             file_manager.updateJson(

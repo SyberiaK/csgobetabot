@@ -16,20 +16,22 @@ def time_converter():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     time_server = cacheFile['server_timestamp']
     tsCache = datetime.fromtimestamp(
-        time_server, tz=tz).strftime('%a, %d %B %Y, %H:%M:%S')
+        time_server, tz=tz).strftime('%H:%M:%S — %d %b %Y %Z')
+    temp1 = tsCache.rsplit(' ', 1)[0]
     tsRCache = str(format_datetime(datetime.strptime(
-        tsCache, '%a, %d %B %Y, %H:%M:%S'), 'EEE, dd MMMM yyyy, HH:mm:ss', locale='ru')).title()
+        temp1, '%H:%M:%S — %d %b %Y'), 'HH:mm:ss — dd MMM yyyy', locale='ru')).title() + ' ' + str(tsCache.split()[-1])
 
     version_date = cacheFile['version_timestamp']
     vdCache = (datetime.fromtimestamp(version_date, tz=tz) +
-               timedelta(hours=8)).strftime('%a, %d %B %Y, %H:%M:%S')
+               timedelta(hours=8)).strftime('%H:%M:%S — %d %b %Y %Z')
+    temp2 = vdCache.rsplit(' ', 1)[0]
     vdRCache = str(format_datetime(datetime.strptime(
-        vdCache, '%a, %d %B %Y, %H:%M:%S'), 'EEE, dd MMMM yyyy, HH:mm:ss', locale='ru')).title()
+        temp2, '%H:%M:%S — %d %b %Y'), 'HH:mm:ss — dd MMM yyyy', locale='ru')).title() + ' ' + str(tsCache.split()[-1])
 
-    tsVCache = datetime.now(tz=tz_valve).strftime('%a, %d %B %Y, %H:%M:%S %Z')
-    tempData = tsVCache.rsplit(' ', 1)[0]
+    tsVCache = datetime.now(tz=tz_valve).strftime('%H:%M:%S — %d %b %Y %Z')
+    temp3 = tsVCache.rsplit(' ', 1)[0]
     tsVRCache = str(format_datetime(datetime.strptime(
-        tempData, '%a, %d %B %Y, %H:%M:%S'), 'EEE, dd MMMM yyyy, HH:mm:ss', locale='ru')).title() + ' ' + str(tsVCache.split()[-1])
+        temp3, '%H:%M:%S — %d %b %Y'), 'HH:mm:ss — dd MMM yyyy', locale='ru')).title() + ' ' + str(tsVCache.split()[-1])
 
     return tsCache, tsRCache, vdCache, vdRCache, tsVCache, tsVRCache
 

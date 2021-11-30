@@ -17,9 +17,8 @@ def africa():
         data_ru = translate(data)
         array_ru.append(data_ru)
     capacity_ru, load_ru = array_ru[0], array_ru[1]
-    africa_text_ru = strings.dc_africa_ru.format(
-        load_ru, capacity_ru, tsRCache)
-    africa_text_en = strings.dc_africa_en.format(load, capacity, tsCache)
+    africa_text_ru = strings.dc_africa_ru.format(load_ru, capacity_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    africa_text_en = strings.dc_africa_en.format(load, capacity) + '\n\n' + strings.last_upd_en.format(tsCache)
     return africa_text_en, africa_text_ru
 
 
@@ -37,9 +36,8 @@ def australia():
         data_ru = translate(data)
         array_ru.append(data_ru)
     capacity_ru, load_ru = array_ru[0], array_ru[1]
-    australia_text_ru = strings.dc_australia_ru.format(
-        load_ru, capacity_ru, tsRCache)
-    australia_text_en = strings.dc_australia_en.format(load, capacity, tsCache)
+    australia_text_ru = strings.dc_australia_ru.format(load_ru, capacity_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    australia_text_en = strings.dc_australia_en.format(load, capacity) + '\n\n' + strings.last_upd_en.format(tsCache)
     return australia_text_en, australia_text_ru
 
 
@@ -57,9 +55,8 @@ def eu_north():
         data_ru = translate(data)
         array_ru.append(data_ru)
     capacity_ru, load_ru = array_ru[0], array_ru[1]
-    eu_north_text_ru = strings.dc_north_eu_ru.format(
-        load_ru, capacity_ru, tsRCache)
-    eu_north_text_en = strings.dc_north_eu_en.format(load, capacity, tsCache)
+    eu_north_text_ru = strings.dc_north_eu_ru.format(load_ru, capacity_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    eu_north_text_en = strings.dc_north_eu_en.format(load, capacity) + '\n\n' + strings.last_upd_en.format(tsCache)
     return eu_north_text_en, eu_north_text_ru
 
 
@@ -80,10 +77,8 @@ def eu_west():
         array_ru.append(data_ru)
     capacity_ru, load_ru, capacity_secondary_ru, load_secondary_ru = array_ru[
         0], array_ru[1], array_ru[2], array_ru[3]
-    eu_west_text_ru = strings.dc_west_eu_ru.format(
-        load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsRCache)
-    eu_west_text_en = strings.dc_west_eu_en.format(
-        load, capacity, load_secondary, capacity_secondary, tsCache)
+    eu_west_text_ru = strings.dc_west_eu_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    eu_west_text_en = strings.dc_west_eu_en.format(load, capacity, load_secondary, capacity_secondary) + '\n\n' + strings.last_upd_en.format(tsCache)
     return eu_west_text_en, eu_west_text_ru
 
 
@@ -104,10 +99,8 @@ def eu_east():
         array_ru.append(data_ru)
     capacity_ru, load_ru, capacity_secondary_ru, load_secondary_ru = array_ru[
         0], array_ru[1], array_ru[2], array_ru[3]
-    eu_east_text_ru = strings.dc_east_eu_ru.format(
-        load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsRCache)
-    eu_east_text_en = strings.dc_east_eu_en.format(
-        load, capacity, load_secondary, capacity_secondary, tsCache)
+    eu_east_text_ru = strings.dc_east_eu_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    eu_east_text_en = strings.dc_east_eu_en.format(load, capacity, load_secondary, capacity_secondary) + '\n\n' + strings.last_upd_en.format(tsCache)
     return eu_east_text_en, eu_east_text_ru
 
 
@@ -131,10 +124,8 @@ def usa_north():
         array_ru.append(data_ru)
     capacity_ru, load_ru, capacity_secondary_ru, load_secondary_ru, capacity_tertiary_ru, load_tertiary_ru = array_ru[
         0], array_ru[1], array_ru[2], array_ru[3], array_ru[4], array_ru[5]
-    usa_north_text_ru = strings.dc_north_us_ru.format(
-        load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, tsRCache)
-    usa_north_text_en = strings.dc_north_us_en.format(
-        load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary, tsCache)
+    usa_north_text_ru = strings.dc_north_us_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    usa_north_text_en = strings.dc_north_us_en.format(load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary) + '\n\n' + strings.last_upd_en.format(tsCache)
     return usa_north_text_en, usa_north_text_ru
 
 
@@ -155,10 +146,8 @@ def usa_south():
         array_ru.append(data_ru)
     capacity_ru, load_ru, capacity_secondary_ru, load_secondary_ru = array_ru[
         0], array_ru[1], array_ru[2], array_ru[3]
-    usa_south_text_ru = strings.dc_south_us_ru.format(
-        load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsRCache)
-    usa_south_text_en = strings.dc_south_us_en.format(
-        load, capacity, load_secondary, capacity_secondary, tsCache)
+    usa_south_text_ru = strings.dc_south_us_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    usa_south_text_en = strings.dc_south_us_en.format(load, capacity, load_secondary, capacity_secondary) + '\n\n' + strings.last_upd_en.format(tsCache)
     return usa_south_text_en, usa_south_text_ru
 
 
@@ -184,10 +173,8 @@ def south_america():
         array_ru.append(data_ru)
     capacity_ru, load_ru, capacity_secondary_ru, load_secondary_ru, capacity_tertiary_ru, load_tertiary_ru, capacity_quaternary_ru, load_quaternary_ru = array_ru[
         0], array_ru[1], array_ru[2], array_ru[3], array_ru[4], array_ru[5], array_ru[6], array_ru[7]
-    south_america_text_ru = strings.dc_south_america_ru.format(
-        load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, load_quaternary_ru, capacity_quaternary_ru, tsRCache)
-    south_america_text_en = strings.dc_south_america_en.format(
-        load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary, load_quaternary, capacity_quaternary, tsCache)
+    south_america_text_ru = strings.dc_south_america_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, load_quaternary_ru, capacity_quaternary_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    south_america_text_en = strings.dc_south_america_en.format(load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary, load_quaternary, capacity_quaternary) + '\n\n' + strings.last_upd_en.format(tsCache)
     return south_america_text_en, south_america_text_ru
 
 
@@ -208,10 +195,8 @@ def india():
         array_ru.append(data_ru)
     capacity_ru, load_ru, capacity_secondary_ru, load_secondary_ru = array_ru[
         0], array_ru[1], array_ru[2], array_ru[3]
-    india_text_ru = strings.dc_india_ru.format(
-        load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, tsRCache)
-    india_text_en = strings.dc_india_en.format(
-        load, capacity, load_secondary, capacity_secondary, tsCache)
+    india_text_ru = strings.dc_india_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    india_text_en = strings.dc_india_en.format(load, capacity, load_secondary, capacity_secondary) + '\n\n' + strings.last_upd_en.format(tsCache)
     return india_text_en, india_text_ru
 
 
@@ -229,8 +214,8 @@ def japan():
         data_ru = translate(data)
         array_ru.append(data_ru)
     capacity_ru, load_ru = array_ru[0], array_ru[1]
-    japan_text_ru = strings.dc_japan_ru.format(load_ru, capacity_ru, tsRCache)
-    japan_text_en = strings.dc_japan_en.format(load, capacity, tsCache)
+    japan_text_ru = strings.dc_japan_ru.format(load_ru, capacity_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    japan_text_en = strings.dc_japan_en.format(load, capacity) + '\n\n' + strings.last_upd_en.format(tsCache)
     return japan_text_en, japan_text_ru
 
 
@@ -251,10 +236,8 @@ def china():
         array_ru.append(data_ru)
     capacity_ru, load_ru, capacity_secondary_ru, load_secondary_ru, capacity_tertiary_ru, load_tertiary_ru = array_ru[
         0], array_ru[1], array_ru[2], array_ru[3], array_ru[4], array_ru[5]
-    china_text_ru = strings.dc_china_ru.format(
-        load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru, tsRCache)
-    china_text_en = strings.dc_china_en.format(
-        load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary, tsCache)
+    china_text_ru = strings.dc_china_ru.format(load_ru, capacity_ru, load_secondary_ru, capacity_secondary_ru, load_tertiary_ru, capacity_tertiary_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    china_text_en = strings.dc_china_en.format(load, capacity, load_secondary, capacity_secondary, load_tertiary, capacity_tertiary) + '\n\n' + strings.last_upd_en.format(tsCache)
     return china_text_en, china_text_ru
 
 
@@ -272,9 +255,8 @@ def emirates():
         data_ru = translate(data)
         array_ru.append(data_ru)
     capacity_ru, load_ru = array_ru[0], array_ru[1]
-    emirates_text_ru = strings.dc_emirates_ru.format(
-        load_ru, capacity_ru, tsRCache)
-    emirates_text_en = strings.dc_emirates_en.format(load, capacity, tsCache)
+    emirates_text_ru = strings.dc_emirates_ru.format(load_ru, capacity_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    emirates_text_en = strings.dc_emirates_en.format(load, capacity) + '\n\n' + strings.last_upd_en.format(tsCache)
     return emirates_text_en, emirates_text_ru
 
 
@@ -292,9 +274,8 @@ def singapore():
         data_ru = translate(data)
         array_ru.append(data_ru)
     capacity_ru, load_ru = array_ru[0], array_ru[1]
-    singapore_text_ru = strings.dc_singapore_ru.format(
-        load_ru, capacity_ru, tsRCache)
-    singapore_text_en = strings.dc_singapore_en.format(load, capacity, tsCache)
+    singapore_text_ru = strings.dc_singapore_ru.format(load_ru, capacity_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    singapore_text_en = strings.dc_singapore_en.format(load, capacity) + '\n\n' + strings.last_upd_en.format(tsCache)
     return singapore_text_en, singapore_text_ru
 
 
@@ -312,9 +293,8 @@ def hong_kong():
         data_ru = translate(data)
         array_ru.append(data_ru)
     capacity_ru, load_ru = array_ru[0], array_ru[1]
-    hong_kong_text_ru = strings.dc_hong_kong_ru.format(
-        load_ru, capacity_ru, tsRCache)
-    hong_kong_text_en = strings.dc_hong_kong_en.format(load, capacity, tsCache)
+    hong_kong_text_ru = strings.dc_hong_kong_ru.format(load_ru, capacity_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    hong_kong_text_en = strings.dc_hong_kong_en.format(load, capacity) + '\n\n' + strings.last_upd_en.format(tsCache)
     return hong_kong_text_en, hong_kong_text_ru
 
 
@@ -332,8 +312,6 @@ def south_korea():
         data_ru = translate(data)
         array_ru.append(data_ru)
     capacity_ru, load_ru = array_ru[0], array_ru[1]
-    south_korea_text_ru = strings.dc_south_korea_ru.format(
-        load_ru, capacity_ru, tsRCache)
-    south_korea_text_en = strings.dc_south_korea_en.format(
-        load, capacity, tsCache)
+    south_korea_text_ru = strings.dc_south_korea_ru.format(load_ru, capacity_ru) +'\n\n' + strings.last_upd_ru.format(tsRCache)
+    south_korea_text_en = strings.dc_south_korea_en.format(load, capacity) + '\n\n' + strings.last_upd_en.format(tsCache)
     return south_korea_text_en, south_korea_text_ru
