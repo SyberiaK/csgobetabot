@@ -1123,9 +1123,8 @@ def delete_keyboard(message):
 
 @bot.message_handler(commands=['ban'])
 def ban(message):
-    admin_list = [config.AQ, config.ZWEEL]
     if message.chat.id == config.CSGOBETACHAT:
-        if message.from_user.id in admin_list:
+        if message.from_user.id in config.ADMIN_LIST:
             if message.reply_to_message:
                 bot.kick_chat_member(message.reply_to_message.chat.id,
                                      message.reply_to_message.from_user.id, until_date=1)
@@ -1184,10 +1183,9 @@ def default_inline(inline_query):
                         'Бета-версия', 'Сброс ограничений', 'Версия игры']
             descriptions = ['Проверить доступность серверов', 'Посмотреть количество онлайн игроков', 'Узнать количество онлайн разработчиков',
                             'Время до сброса ограничений опыта и дропа', 'Проверить последнюю версию игры']
-            dataMOD = []
+            markup = []
             for i in data:
-                i = i + '\n\nⓘ <b>Информация предоставлена каналом</b> @csgobeta'
-                dataMOD.append(i)
+                markup.append(buttons.markup_inline_button_ru)
         else:
             data = [status_text_en, mm_stats_text_en,
                     devcount_text_en, timer_text_en, gameversion_text_en]
@@ -1195,14 +1193,13 @@ def default_inline(inline_query):
                         'Beta version', 'Drop cap reset', 'Game version']
             descriptions = ['Check the availability of the servers', 'Check the count of online players', 'Show the count of in-game developers',
                             'Time left until experience and drop cap reset', 'Check the latest game version']
-            dataMOD = []
+            markup = []
             for i in data:
-                i = i + '\n\nⓘ <b>Information provided by</b> @csgobeta'
-                dataMOD.append(i)
+                markup.append(buttons.markup_inline_button_en)
         results = []
-        for data, tt, desc, thumb in zip(dataMOD, titles, descriptions, thumbs):
+        for data, tt, desc, thumb, inline_button in zip(data, titles, descriptions, thumbs, markup):
             results.append(types.InlineQueryResultArticle(random.randint(0, 9999), tt, input_message_content=types.InputTextMessageContent(
-                data, parse_mode='html'), thumb_url=thumb, description=desc))
+                data, parse_mode='html'), thumb_url=thumb, description=desc, reply_markup=inline_button))
         bot.answer_inline_query(inline_query.id, results, cache_time=5)
     except Exception as e:
         bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
@@ -1254,26 +1251,24 @@ def inline_dc(inline_query):
                         'Восточноевропейские ДЦ', 'Западноевропейские ДЦ', 'ДЦ северной части США', 'ДЦ южной части США', 'Австралийский ДЦ',
                         'Африканский ДЦ', 'Южноамериканские ДЦ']
             descriptions = ['Проверить состояние']
-            dataMOD = []
+            markup = []
             for i in data:
-                i = i + '\n\nⓘ <b>Информация предоставлена каналом</b> @csgobeta'
-                dataMOD.append(i)
+                markup.append(buttons.markup_inline_button_ru)
         else:
             data = [china_text_en, emirates_text_en, hong_kong_text_en, india_text_en, japan_text_en, singapore_text_en, south_korea_text_en, eu_north_text_en,
                     eu_east_text_en, eu_west_text_en, usa_north_text_en, usa_south_text_en, australia_text_en, africa_text_en, south_america_text_en]
             titles = ['Chinese DC', 'Emirati DC', 'Hong Kongese DC', 'Indian DC', 'Japanese DC', 'Singaporean DC', 'South Korean DC', 'North European DC',
                         'East European DC', 'West European DC', 'Northern USA DC', 'Southern USA DC', 'Australian DC', 'African DC', 'South American DC']
             descriptions = ['Check the status']
-            dataMOD = []
+            markup = []
             for i in data:
-                i = i + '\n\nⓘ <b>Information provided by</b> @csgobeta'
-                dataMOD.append(i)
+                markup.append(buttons.markup_inline_button_en)
         results = []
-        for data, tt, desc, thumb, dctag in zip(dataMOD, titles, descriptions*100, thumbs, tagList):
+        for data, tt, desc, thumb, dctag, inline_markup in zip(data, titles, descriptions*100, thumbs, tagList, markup):
             for id in dctag:
                 if inline_query.query == id:
                     results.append(types.InlineQueryResultArticle(random.randint(0, 9999), tt, input_message_content=types.InputTextMessageContent(
-                        data, parse_mode='html'), thumb_url=thumb, description=desc))
+                        data, parse_mode='html'), thumb_url=thumb, description=desc, reply_markup=inline_markup))
         bot.answer_inline_query(inline_query.id, results, cache_time=5)
     except Exception as e:
         bot.send_message(config.LOGCHANNEL, f'❗️{e}\n\n↩️ inline_query')
