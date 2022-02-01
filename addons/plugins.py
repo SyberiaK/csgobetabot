@@ -26,7 +26,7 @@ def time_converter():
                timedelta(hours=8)).strftime('%H:%M:%S — %d %b %Y %Z')
     temp2 = vdCache.rsplit(' ', 1)[0]
     vdRCache = str(format_datetime(datetime.strptime(
-        temp2, '%H:%M:%S — %d %b %Y'), 'HH:mm:ss — dd MMM yyyy', locale='ru')).title() + ' ' + str(tsCache.split()[-1])
+        temp2, '%H:%M:%S — %d %b %Y'), 'HH:mm:ss — dd MMM yyyy', locale='ru')).title() + ' ' + str(vdCache.split()[-1])
 
     tsVCache = datetime.now(tz=tz_valve).strftime('%H:%M:%S — %d %b %Y %Z')
     temp3 = tsVCache.rsplit(' ', 1)[0]

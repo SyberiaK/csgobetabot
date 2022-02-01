@@ -1137,9 +1137,8 @@ def ban(message):
 
 @bot.message_handler(commands=['unban'])
 def unban(message):
-    admin_list = [config.AQ, config.ZWEEL]
     if message.chat.id == config.CSGOBETACHAT:
-        if message.from_user.id in admin_list:
+        if message.from_user.id in config.ADMIN_LIST:
             if message.reply_to_message:
                 bot.unban_chat_member(message.reply_to_message.chat.id,
                                       message.reply_to_message.from_user.id, only_if_banned=True)
