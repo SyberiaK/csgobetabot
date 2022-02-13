@@ -102,8 +102,6 @@ def depots():
         try:
             for keys, values in client.get_product_info(apps=[730], timeout=15).items():
                 for k, v in values.items():
-                    currentDPRBuild = v['depots']['branches']['dpr']['buildid']
-                    currentPublicBuild = v['depots']['branches']['public']['buildid']
                     try:
                         currentRKVBuild = v['depots']['branches']['rkvtest']['buildid']
                     except Exception as e:
@@ -112,6 +110,12 @@ def depots():
                         currentTestBuild = v['depots']['branches']['test']['buildid']
                     except Exception as e:
                         print(f'\n> Error fetching Test build:\n\n{e}\n')
+                    try:
+                        currentPLXBuild = v['depots']['branches']['plxtest']['buildid']
+                    except Exception as e:
+                        print(f'\n> Error fetching PLX build:\n\n{e}\n')
+                    currentDPRBuild = v['depots']['branches']['dpr']['buildid']
+                    currentPublicBuild = v['depots']['branches']['public']['buildid']
 
         except Exception as e:
             print(f'\n> Error trying to fetch depots:\n\n{e}\n')
@@ -146,6 +150,11 @@ def depots():
             file_manager.updateJson(
                 config.CACHE_FILE_PATH, currentTestBuild, cache_key_list[26])
             send_alert(currentTestBuild, cache_key_list[26])
+
+        if currentPLXBuild != cacheFile['plx']:
+            file_manager.updateJson(
+                config.CACHE_FILE_PATH, currentPLXBuild, cache_key_list[27])
+            send_alert(currentPLXBuild, cache_key_list[27])
 
         time.sleep(45)
 
@@ -221,6 +230,8 @@ def send_alert(newVal, key):
         text = strings.notificationTextTST.format(newVal)
     elif key == 'ds':
         text = strings.notificationTextDS.format(newVal)
+    elif key == 'plx':
+        text = strings.notificationTextPLX.format(newVal)
 
     bot = telebot.TeleBot(config.BOT_TOKEN)
     if not config.TEST_MODE:
