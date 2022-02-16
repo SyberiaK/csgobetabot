@@ -383,7 +383,7 @@ stats_ru = '''<p><code>Cгенерировано с помощью <a href="http
 
 ### Text for Wrong Request ###
 # English
-unknownRequest_en = '⚠️ Nothing found, please use of the following buttons:'
+unknownRequest_en = '⚠️ Nothing found, please use one of the following buttons:'
 
 # Russian
 unknownRequest_ru = '⚠️ Ничего не найдено, пожалуйста, воспользуйтесь одной из приведённых кнопок:'
@@ -406,45 +406,39 @@ wrongBOT_ru = '🧐 Извините, что-то не так. Пожалуйс�
 
 
 ### Text for new BuildID ###
-notificationTextUPD = '''⚡️ Публичная сборка CS:GO была обновлена.
+notificationTextUPD = '''⚡️ <a href="https://t.me/csgotracker/28">Публичная сборка</a> CS:GO была обновлена.
 
 ID новой сборки: <code>{}</code>'''
 
 
 ### Text for new rkvbuild ###
-notificationTextRKV = '''🌋 Приватная «RKV»* сборка CS:GO была обновлена.
+notificationTextRKV = '''🌋 Приватная <a href="https://t.me/csgobeta/253">RKV-ветка</a> CS:GO была обновлена.
 
-ID новой сборки: <code>{}</code>
-
-*<i>Подробнее про RKV: t.me/csgobeta/253</i>'''
+ID новой сборки: <code>{}</code>'''
 
 
 ### Text for new testbuild ###
-notificationTextTST = '''🧪 Приватная «Test» сборка CS:GO была обновлена.
+notificationTextTST = '''🧪 Приватная ветка CS:GO под названием «Test» была обновлена.
 
 ID новой сборки: <code>{}</code>'''
 
 
 ### Text for new DPR BuildID ###
-notificationTextDPR = '''🔒 Приватная «DPR»* сборка CS:GO была обновлена.
+notificationTextDPR = '''🔒 Приватная <a href="https://t.me/csgotracker/25">DPR-ветка</a> CS:GO была обновлена.
 
-ID новой сборки: <code>{}</code>
-
-*<i>DPR — developer pre-release</i>'''
+ID новой сборки: <code>{}</code>'''
 
 
 ### Text for DS update ###
-notificationTextDS = '''🖥 Выделенные сервера CS:GO были обновлены.
+notificationTextDS = '''🖥 <a href="https://t.me/csgotracker/26">Выделенные серверы</a> CS:GO были обновлены.
 
 Номер изменения: <code>{}</code>'''
 
 
 ### Text for DS update ###
-notificationTextPLX = '''❔ Приватная «PLX»* сборка CS:GO была обновлена.
+notificationTextPLX = '''❔ Приватная ветка CS:GO под названием «PLX» была обновлена.
 
-ID новой сборки: <code>{}</code>
-
-*<i>Неизвестно.'''
+ID новой сборки: <code>{}</code>'''
 
 ### Dev Change Text ###
 dev_change_text = '''🔔 В бета-версии CS:GO изменилось количество разработчиков.
@@ -454,12 +448,12 @@ dev_change_text = '''🔔 В бета-версии CS:GO изменилось к
 
 ### Text for Workshop Changes ###
 # Single
-notiNewMap_ru = '''🆕 Официальный аккаунт CS:GO в Steam загрузил карту <b>{}</b> в Мастерскую для совместимости с будущими версиями игры.
+notiNewMap_ru = '''<a href="https://steamcommunity.com/sharedfiles/filedetails/?id={}">‎</a>🆕 Официальный аккаунт CS:GO загрузил карту <b>{}</b> <a href="https://t.me/csgotracker/29">в Мастерскую Steam</a>.
 
 🔗 steamcommunity.com/sharedfiles/filedetails/?id={}'''
 
 # Multiple
-notiNewMaps_ru = '''🆕 Официальный аккаунт CS:GO в Steam загрузил карты <b>{}</b> в Мастерскую для совместимости с будущими версиями игры.
+notiNewMaps_ru = '''<a href="https://steamcommunity.com/profiles/76561198082857351/myworkshopfiles/">‎</a>🆕 Официальный аккаунт CS:GO загрузил карты <b>{}</b> <a href="https://t.me/csgotracker/29">в Мастерскую Steam</a>.
 
 🔗 steamcommunity.com/profiles/76561198082857351/myworkshopfiles/'''
 

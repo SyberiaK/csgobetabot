@@ -1128,7 +1128,7 @@ def ban(message):
             if message.reply_to_message:
                 bot.kick_chat_member(message.reply_to_message.chat.id,
                                      message.reply_to_message.from_user.id, until_date=1)
-                bot.send_message(message.chat.id, "{} получил VAC бан.".format(
+                bot.send_message(message.chat.id, "{} получил(а) VAC бан.".format(
                     message.reply_to_message.from_user.first_name), reply_to_message_id=message.reply_to_message.message_id)
         else:
             bot.send_message(message.chat.id, "Эта команда недоступна, Вы не являетесь разработчиком Valve.",

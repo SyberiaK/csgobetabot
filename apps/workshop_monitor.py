@@ -69,7 +69,7 @@ def workshop_monitor():
                     delta = list(zip(mapNames, newIDS))
                     if len(delta) < 2:
                         for x, y in delta:
-                            text = strings.notiNewMap_ru.format(x, y)
+                            text = strings.notiNewMap_ru.format(y, x, y)
                     else:
                         names = ' и '.join(
                             [', '.join(mapNames[:-1]), mapNames[-1]] if len(mapNames) > 2 else mapNames)
