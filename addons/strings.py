@@ -132,18 +132,18 @@ gameversion_ru = '''⚙️ Текущая версия игры: <code>{} ({}/{}
 # English
 url_ex_en = '''📖 Please, enter one of the following options:
         
-• Profile URL (ex: <code>https://steamcommunity.com/id/abitmoony</code> or <code>https://steamcommunity.com/profiles/76561198346163255</code>)
-• Steam ID (ex: <code>76561198346163255</code>)
-• Custom URL (ex: <code>abitmoony</code>)
+• Profile URL (ex: <code>https://steamcommunity.com/id/awwqua</code> or <code>https://steamcommunity.com/profiles/76561198346163255</code>)
+• SteamID (ex: <code>76561198346163255</code>)
+• Custom URL (ex: <code>awwqua</code>)
 
 Use /cancel to cancel this command.'''
 
 # Russian
 url_ex_ru = '''🔗 Пожалуйста, введите один из следующих вариантов:
 
-• Ссылка на профиль (напр.: <code>https://steamcommunity.com/id/abitmoony</code> или <code>https://steamcommunity.com/profiles/76561198346163255</code>)
-• Steam ID (напр.: <code>76561198346163255</code>)
-• Личная ссылка (напр.: <code>abitmoony</code>)
+• Ссылка на профиль (напр.: <code>https://steamcommunity.com/id/awwqua</code> или <code>https://steamcommunity.com/profiles/76561198346163255</code>)
+• SteamID (напр.: <code>76561198346163255</code>)
+• Личная ссылка (напр.: <code>awwqua</code>)
 
 Используйте /cancel, чтобы отменить команду.'''
 
@@ -170,7 +170,7 @@ bans_en = '''🔍 <b>General profile information:</b>
 • Steam3 ID: <code>{}</code>
 • Invite URL: {}
 • CS:GO friend code: <code>{}</code>
-• FACEIT: {}
+• FACEIT URL: {}
 
 📛 <b>Bans and restrictions:</b>
 
@@ -190,15 +190,15 @@ bans_ru = '''🔍 <b>Общая информация профиля:</b>
 • Steam3 ID: <code>{}</code>
 • Пригласительная ссылка: {}
 • Код друга CS:GO: <code>{}</code>
-• FACEIT: {}
+• Ссылка на FACEIT: {}
 
 📛 <b>Запреты и ограничения:</b>
 
-• Игровые баны: {}
-• VAC баны: {}
-• Бан в сообществе: {}
-• Трейд бан: {}
-• Бан на FACEIT: {}'''
+• Игровые блокировки: {}
+• Блокировки VAC: {}
+• Блокировка в сообществе: {}
+• Ограничение на обмен: {}
+• Блокировка FACEIT: {}'''
 
 
 ### In-game stats ###
@@ -408,25 +408,25 @@ wrongBOT_ru = '🧐 Извините, что-то не так. Пожалуйс�
 ### Text for new BuildID ###
 notificationTextUPD = '''⚡️ <a href="https://t.me/csgotracker/28">Публичная сборка</a> CS:GO была обновлена.
 
-ID новой сборки: <code>{}</code>'''
+Идентификатор новой сборки: <code>{}</code>'''
 
 
 ### Text for new rkvbuild ###
 notificationTextRKV = '''🌋 Приватная <a href="https://t.me/csgobeta/253">RKV-ветка</a> CS:GO была обновлена.
 
-ID новой сборки: <code>{}</code>'''
+Идентификатор новой сборки: <code>{}</code>'''
 
 
 ### Text for new testbuild ###
 notificationTextTST = '''🧪 Приватная ветка CS:GO под названием «Test» была обновлена.
 
-ID новой сборки: <code>{}</code>'''
+Идентификатор новой сборки: <code>{}</code>'''
 
 
 ### Text for new DPR BuildID ###
 notificationTextDPR = '''🔒 Приватная <a href="https://t.me/csgotracker/25">DPR-ветка</a> CS:GO была обновлена.
 
-ID новой сборки: <code>{}</code>'''
+Идентификатор новой сборки: <code>{}</code>'''
 
 
 ### Text for DS update ###
@@ -438,7 +438,13 @@ notificationTextDS = '''🖥 <a href="https://t.me/csgotracker/26">Выделе�
 ### Text for DS update ###
 notificationTextPLX = '''❔ Приватная ветка CS:GO под названием «PLX» была обновлена.
 
-ID новой сборки: <code>{}</code>'''
+Идентификатор новой сборки: <code>{}</code>'''
+
+
+### Text for DS update ###
+notificationTextDeck = '''🎮 Приватная «Steam Deck» ветка CS:GO была обновлена.
+
+Идентификатор новой сборки: <code>{}</code>'''
 
 ### Dev Change Text ###
 dev_change_text = '''🔔 В бета-версии CS:GO изменилось количество разработчиков.

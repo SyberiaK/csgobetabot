@@ -114,6 +114,10 @@ def depots():
                         currentPLXBuild = v['depots']['branches']['plxtest']['buildid']
                     except Exception as e:
                         print(f'\n> Error fetching PLX build:\n\n{e}\n')
+                    try:
+                        currentDECKBuild = v['depots']['branches']['steamdeck']['buildid']
+                    except Exception as e:
+                        print(f'\n> Error fetching Steam Deck build:\n\n{e}\n')
                     currentDPRBuild = v['depots']['branches']['dpr']['buildid']
                     currentPublicBuild = v['depots']['branches']['public']['buildid']
 
@@ -155,6 +159,11 @@ def depots():
             file_manager.updateJson(
                 config.CACHE_FILE_PATH, currentPLXBuild, cache_key_list[27])
             send_alert(currentPLXBuild, cache_key_list[27])
+
+        if currentDECKBuild != cacheFile['steamdeck']:
+            file_manager.updateJson(
+                config.CACHE_FILE_PATH, currentDECKBuild, cache_key_list[28])
+            send_alert(currentDECKBuild, cache_key_list[28])
 
         time.sleep(45)
 
@@ -232,6 +241,8 @@ def send_alert(newVal, key):
         text = strings.notificationTextDS.format(newVal)
     elif key == 'plx':
         text = strings.notificationTextPLX.format(newVal)
+    elif key == 'steamdeck':
+        text = strings.notificationTextDeck.format(newVal)
 
     bot = telebot.TeleBot(config.BOT_TOKEN)
     if not config.TEST_MODE:

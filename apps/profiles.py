@@ -925,29 +925,36 @@ def ban_info(data):
         steam3ID = SteamID(steam64).as_steam3
         inviteUrl = SteamID(steam64).invite_url
         csgoCode = SteamID(steam64).as_csgo_friend_code
+
         responseFaceit = requests.get(faceitAPI).json()['payload']['results']
-        nicknames = [y for i in responseFaceit for x,
-                     y in i.items() if x == 'nickname']
-        faceitBans = [y for i in responseFaceit for x,
-                      y in i.items() if x == 'status']
-        faceitURLS = '\n'.join(
-            'https://www.faceit.com/en/players/{}'.format(x) for x in nicknames)
-        if len(faceitURLS) == 0:
-            faceitURLS = '<code>not found</code>'
-        if 'banned' in faceitBans:
-            faceitBan = 'banned'
-            faceitBanR = 'забанен'
+        if responseFaceit:
+            resultFaceit = list(filter(lambda x: [i for i in x['games'] if i['name'] == 'csgo'], responseFaceit))[0]
+            faceitURL = faceitURLR = 'https://faceit.com/en/players/{}'.format(resultFaceit['nickname'])
+            if 'banned' in resultFaceit['status']:
+                faceitBan = 'banned'
+                faceitBanR = 'заблокирован'
+            else:
+                faceitBan = 'none'
+                faceitBanR = 'нет'
+            
+            for i in resultFaceit['games']:
+                if i['name'] == 'csgo':
+                    faceitURL = faceitURL + '\n' + '• FACEIT level: ' + str(i['skill_level'])
+                    faceitURLR = faceitURLR + '\n' + '• Ранг FACEIT: ' + str(i['skill_level'])
         else:
+            faceitURL = 'not found'
+            faceitURLR = 'не найдена'
+
             faceitBan = 'none'
             faceitBanR = 'нет'
-
+        
         banData = requests.get(bans).json()['players'][0]
         if banData['VACBanned']:
             vacBan = str(banData['NumberOfVACBans']) + \
                 ' (days since last ban: ' + \
                 str(banData['DaysSinceLastBan']) + ')'
             vacBanR = str(banData['NumberOfVACBans']) + \
-                ' (дней с момента последнего бана: ' + \
+                ' (дней с момента последней блокировки: ' + \
                 str(banData['DaysSinceLastBan']) + ')'
         else:
             vacBan = 0
@@ -955,21 +962,21 @@ def ban_info(data):
         gameBans = banData['NumberOfGameBans']
         if banData['CommunityBanned']:
             communityBan = 'banned'
-            communityBanR = 'забанен'
+            communityBanR = 'заблокирован'
         else:
             communityBan = 'none'
             communityBanR = 'нет'
         if banData['EconomyBan'] == 'banned':
             tradeBan = 'banned'
-            tradeBanR = 'забанен'
+            tradeBanR = 'заблокирован'
         else:
             tradeBan = 'none'
             tradeBanR = 'нет'
 
         bans_text_en = strings.bans_en.format(vanityURL, steamID, accountID, steam2ID, steam3ID, inviteUrl,
-                                              csgoCode, faceitURLS, gameBans, vacBan, communityBan, tradeBan, faceitBan)
+                                              csgoCode, faceitURL, gameBans, vacBan, communityBan, tradeBan, faceitBan)
         bans_text_ru = strings.bans_ru.format(vanityURLR, steamID, accountID, steam2ID, steam3ID, inviteUrl,
-                                              csgoCode, faceitURLS, gameBans, vacBanR, communityBanR, tradeBanR, faceitBanR)
+                                              csgoCode, faceitURLR, gameBans, vacBanR, communityBanR, tradeBanR, faceitBanR)
         return bans_text_en, bans_text_ru
     except Exception as e:
         print('\n\nError:' + str(e) + '\n\n')
