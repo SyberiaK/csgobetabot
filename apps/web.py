@@ -1,67 +1,72 @@
-import requests
-from bs4 import BeautifulSoup
 import re
 from datetime import datetime
 
+import config
+import requests
+from bs4 import BeautifulSoup
 
-url_st = 'https://store.steampowered.com/stats/'
-url_cs = 'https://blog.counter-strike.net'
-url_gv = 'https://raw.githubusercontent.com/SteamDatabase/GameTracking-CSGO/master/csgo/steam.inf'
+monthly_api = "https://api.steampowered.com/ICSGOServers_730/GetMonthlyPlayerCount/v1"
+url_github = "https://raw.githubusercontent.com/SteamDatabase/GameTracking-CSGO/master/csgo/steam.inf"
+asset_api = f"https://api.steampowered.com/ISteamEconomy/GetAssetPrices/v1/?appid={config.CSGO_APP_ID}&key={config.STEAM_API_KEY}"
 headers = {
-    'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0'}
-
-
-class PeakOnline:
-    def get_peak(self):
-        try:
-            soup = BeautifulSoup(requests.get(
-                url_st, headers=headers).content, 'html.parser')
-            string = soup.find(string="Counter-Strike: Global Offensive")
-            tr = string.find_parent("tr")
-            span = tr.find_all("span")
-            peak24 = str(span[1]).replace('<span class="currentServers">', '').replace(
-                '</span>', '').replace(',', '')
-            return int(peak24)
-        except:
-            peak24 = 0
-            return peak24
+    "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0"
+}
 
 
 class Monthly:
     def get_unique(self):
+        players = {"monthly_unique_players": "unknown"}
         try:
-            soup = BeautifulSoup(requests.get(
-                url_cs, headers=headers).content, 'html.parser')
-            unique = soup.find(
-                "div", {"class": "monthly"}).string.replace(',', '')
-            return int(unique)
+            response = requests.get(monthly_api, headers=headers, timeout=15).json()
+            players["monthly_unique_players"] = int(response['result']['players'])
+            return players
         except:
-            unique = 0
-            return unique
+            return players
 
 
 class GameVersion:
     def get_gameVer(self):
+        dataset = {
+            "client_version": "unknown",
+            "server_version": "unknown",
+            "patch_version": "unknown",
+            "version_timestamp": "unknown",
+        }
         try:
-            soup = BeautifulSoup(requests.get(
-                url_gv, headers=headers).content, 'html.parser')
+            soup = BeautifulSoup(
+                requests.get(url_github, headers=headers, timeout=15).content,
+                "html.parser",
+            )
 
             data = soup.get_text()
             options = {}
-            config_entries = re.split('\n|=', data)
+            config_entries = re.split("\n|=", data)
 
             for key, value in zip(config_entries[0::2], config_entries[1::2]):
-                cleaned_key = key.replace("[", '').replace("]", '')
+                cleaned_key = key.replace("[", "").replace("]", "")
                 options[cleaned_key] = value
 
-            dt = str(options['VersionDate']) + ' ' + \
-                str(options['VersionTime'])
-            client_version = int(options['ClientVersion'])
-            server_version = int(options['ServerVersion'])
-            patch_version = options['PatchVersion']
-            version_timestamp = datetime.strptime(
-                dt, "%b %d %Y %H:%M:%S").timestamp()
+            dt = f'{options["VersionDate"]} {options["VersionTime"]}'
 
-            return client_version, server_version, patch_version, version_timestamp
+            dataset["client_version"] = int(options["ClientVersion"])
+            dataset["server_version"] = int(options["ServerVersion"])
+            dataset["patch_version"] = options["PatchVersion"]
+            dataset["version_timestamp"] = datetime.strptime(
+                dt, "%b %d %Y %H:%M:%S"
+            ).timestamp()
+
+            return dataset
+        except:
+            return dataset
+
+
+class Currency:
+    def get_currency(self):
+        try:
+            r = requests.get(asset_api, timeout=15).json()["result"]["assets"]
+            key_price = list(filter(lambda cur: cur["classid"] == "1544098059", r))
+            del key_price[0]["prices"]["Unknown"]
+            del key_price[0]["prices"]["BYN"]
+            return key_price[0]["prices"]
         except Exception as e:
             return e

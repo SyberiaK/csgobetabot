@@ -1,4 +1,5 @@
 import re
+
 import numpy as np
 
 DICTIONARY = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefhijkmnopqrstuvwxyz23456789"
@@ -29,8 +30,7 @@ def decode(code):
 
 
 def sortBytes(byte):
-    data = [byte[10] & 8, byte[13] & 16, byte[13]
-            & 32, byte[13] & 64, byte[13] & 128]
+    data = [byte[10] & 8, byte[13] & 16, byte[13] & 32, byte[13] & 64, byte[13] & 128]
     toggle = []
     for v in data:
         if v > 0:
@@ -59,10 +59,11 @@ def sortBytes(byte):
         "cl_crosshairgap_useweaponvalue": toggle[2],
         "cl_crosshairusealpha": toggle[3],
         "cl_crosshair_t": toggle[4],
-        "cl_crosshairsize": (((byte[15] & 31) << 8) + byte[14]) / 10.0
+        "cl_crosshairsize": (((byte[15] & 31) << 8) + byte[14]) / 10.0,
     }
 
     return parameters
+
 
 # # # # #
 
@@ -76,20 +77,24 @@ def encode(params):
         num, r = divmod(num, DICTIONARY_LENGTH)
         code += DICTIONARY[r]
 
-    return "CSGO-%s-%s-%s-%s-%s" % (code[:5], code[5:10], code[10:15], code[15:20], code[20:])
+    return "CSGO-%s-%s-%s-%s-%s" % (
+        code[:5],
+        code[5:10],
+        code[10:15],
+        code[15:20],
+        code[20:],
+    )
 
 
 def toList(params):
-    cl_crosshairgap = np.uint8(params["cl_crosshairgap"]*10)
-    cl_crosshair_outlinethickness = int(
-        params["cl_crosshair_outlinethickness"]*2)
+    cl_crosshairgap = np.uint8(params["cl_crosshairgap"] * 10)
+    cl_crosshair_outlinethickness = int(params["cl_crosshair_outlinethickness"] * 2)
     cl_crosshaircolor_r = int(params["cl_crosshaircolor_r"])
     cl_crosshaircolor_g = int(params["cl_crosshaircolor_g"])
     cl_crosshaircolor_b = int(params["cl_crosshaircolor_b"])
     cl_crosshairalpha = int(params["cl_crosshairalpha"])
-    cl_crosshair_dynamic_splitdist = int(
-        params["cl_crosshair_dynamic_splitdist"])
-    cl_fixedcrosshairgap = np.uint8(params["cl_fixedcrosshairgap"]*10)
+    cl_crosshair_dynamic_splitdist = int(params["cl_crosshair_dynamic_splitdist"])
+    cl_fixedcrosshairgap = np.uint8(params["cl_fixedcrosshairgap"] * 10)
 
     byte1 = 1
     flag = True
@@ -106,30 +111,86 @@ def toList(params):
                 var = 0
             toggle.append(var)
 
-        if (i & 6 == int(params["cl_crosshaircolor"])) and (toggle[0] == int(params["cl_crosshair_drawoutline"])) and (i & 240 == (int(params["cl_crosshair_dynamic_splitalpha_innermod"]*10)) << 4):
+        if (
+            (i & 6 == int(params["cl_crosshaircolor"]))
+            and (toggle[0] == int(params["cl_crosshair_drawoutline"]))
+            and (
+                i & 240
+                == (int(params["cl_crosshair_dynamic_splitalpha_innermod"] * 10)) << 4
+            )
+        ):
             byte10 = i
-        if (i & 15 == int(params["cl_crosshair_dynamic_splitalpha_outermod"]*10) and (i & 240 == (int(params["cl_crosshair_dynamic_maxdist_splitratio"]*10)) << 4)):
+        if i & 15 == int(params["cl_crosshair_dynamic_splitalpha_outermod"] * 10) and (
+            i & 240
+            == (int(params["cl_crosshair_dynamic_maxdist_splitratio"] * 10)) << 4
+        ):
             byte11 = i
-        if (i & 63 == int(params["cl_crosshairthickness"]*10)) and flag:
+        if (i & 63 == int(params["cl_crosshairthickness"] * 10)) and flag:
             byte12 = i
             flag = False
-        if (i & 14 == (int(params["cl_crosshairstyle"]) << 1)) and flag2 and toggle[1:] == [int(params["cl_crosshairdot"]), int(params["cl_crosshairgap_useweaponvalue"]), int(params["cl_crosshairusealpha"]), int(params["cl_crosshair_t"])]:
+        if (
+            (i & 14 == (int(params["cl_crosshairstyle"]) << 1))
+            and flag2
+            and toggle[1:]
+            == [
+                int(params["cl_crosshairdot"]),
+                int(params["cl_crosshairgap_useweaponvalue"]),
+                int(params["cl_crosshairusealpha"]),
+                int(params["cl_crosshair_t"]),
+            ]
+        ):
             byte13 = i
             flag2 = False
         for z in range(256):
-            if ((((z & 31) << 8) + i) == int(params["cl_crosshairsize"]*10)) and flag3:
+            if (
+                (((z & 31) << 8) + i) == int(params["cl_crosshairsize"] * 10)
+            ) and flag3:
                 byte14 = i
                 byte15 = z
                 flag3 = False
 
         byte16 = 0
         byte17 = 0
-    byte0 = byte1 + cl_crosshairgap + cl_crosshair_outlinethickness + cl_crosshaircolor_r + cl_crosshaircolor_g + cl_crosshaircolor_b + \
-        cl_crosshairalpha + cl_crosshair_dynamic_splitdist + cl_fixedcrosshairgap + \
-        byte10 + byte11 + byte12 + byte13 + byte14 + byte15 + byte16 + byte17
+    byte0 = (
+        byte1
+        + cl_crosshairgap
+        + cl_crosshair_outlinethickness
+        + cl_crosshaircolor_r
+        + cl_crosshaircolor_g
+        + cl_crosshaircolor_b
+        + cl_crosshairalpha
+        + cl_crosshair_dynamic_splitdist
+        + cl_fixedcrosshairgap
+        + byte10
+        + byte11
+        + byte12
+        + byte13
+        + byte14
+        + byte15
+        + byte16
+        + byte17
+    )
     byte0 = np.uint8(byte0)
-    byteList = [byte0, byte1, cl_crosshairgap, cl_crosshair_outlinethickness, cl_crosshaircolor_r, cl_crosshaircolor_g, cl_crosshaircolor_b,
-                cl_crosshairalpha, cl_crosshair_dynamic_splitdist, cl_fixedcrosshairgap, byte10, byte11, byte12, byte13, byte14, byte15, byte16, byte17]
+    byteList = [
+        byte0,
+        byte1,
+        cl_crosshairgap,
+        cl_crosshair_outlinethickness,
+        cl_crosshaircolor_r,
+        cl_crosshaircolor_g,
+        cl_crosshaircolor_b,
+        cl_crosshairalpha,
+        cl_crosshair_dynamic_splitdist,
+        cl_fixedcrosshairgap,
+        byte10,
+        byte11,
+        byte12,
+        byte13,
+        byte14,
+        byte15,
+        byte16,
+        byte17,
+    ]
 
     return byteList
 
@@ -139,9 +200,9 @@ def toNum(byteList):
     for i in byteList:
         rawHex = hex(i)[2:]
         if len(rawHex) < 2:
-            rawHex = "0" + rawHex
+            rawHex = f"0{rawHex}"
         numHex += rawHex
-    numHex = "0x" + numHex
+    numHex = f"0x{numHex}"
     num = int(numHex, 0)
 
     return num

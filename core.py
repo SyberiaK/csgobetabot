@@ -1,100 +1,110 @@
 import logging
-import telebot
 import time
+from datetime import datetime, timedelta
 from threading import Thread
 
+import pandas as pd
+import telebot
 
 import config
-from addons import strings, file_manager
+from addons import file_manager
 from apps.valve_api import ValveServersAPI
-from apps.web import PeakOnline, Monthly
-
+from apps.web import Currency, Monthly
+from strings import notifications
 
 api = ValveServersAPI()
-peak_count = PeakOnline()
 month_unique = Monthly()
+currency = Currency()
 
 
 def info_updater():
     while True:
         try:
-            print('\nNew session started..\n')
+            print("\nNew session started..\n")
             cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
 
-            cache_key_list = []
-            cache_value_list = []
-            value_list = []
-
-            playerCount = api.get_players()
-            devCount = api.get_devs()
             overallData = api.get_status()
 
-            for keys, values in cacheFile.items():
-                cache_key_list.append(keys)
-                cache_value_list.append(values)
+            for key, value in overallData.items():
+                for cachedKey, cachedValue in cacheFile.items():
+                    if key == cachedKey:
+                        if value != cachedValue:
+                            file_manager.updateJson(config.CACHE_FILE_PATH, value, key)
 
-            for data in [cacheFile['public_build_ID'], cacheFile['dpr_build_ID'], cacheFile['game_coordinator']]:
-                value_list.append(data)
-            for data in overallData[0:4]:
-               value_list.append(data)
-            if overallData[4] < 69420:
-                value_list.append(cacheFile['server_timestamp'])
-            else:
-                value_list.append(overallData[4])
-            for data in overallData[5:9]:
-                value_list.append(data)
-            for data in [playerCount, devCount, cacheFile['dev_all_time_peak'], peak_count.get_peak(), cacheFile['peak_all_time'], cacheFile['unique_monthly']]:
-                value_list.append(data)
-            for data in [cacheFile['client_version'], cacheFile['server_version'], cacheFile['patch_version'], cacheFile['version_timestamp']]:
-                value_list.append(data)
-            for data in [cacheFile['graph_url'], cacheFile['graph_url2']]:
-                value_list.append(data)
-            value_list.append(overallData[9])
+            if cacheFile["online_players"] > cacheFile["player_alltime_peak"]:
+                file_manager.updateJson(
+                    config.CACHE_FILE_PATH, cacheFile["online_players"], "player_alltime_peak"
+                )
+                send_alert(cacheFile["online_players"])
 
-            for values, cache_values, cache_keys in zip(value_list, cache_value_list, cache_key_list):
-                if values != cache_values:
-                    file_manager.updateJson(config.CACHE_FILE_PATH, values, cache_keys)
+            df = pd.read_csv(config.PLAYER_CHART_FILE_PATH, parse_dates=["DateTime"])
+            end_date = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+            start_date = (datetime.utcnow() - timedelta(days=1)).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+            mask = (df["DateTime"] > start_date) & (df["DateTime"] <= end_date)
+            player_24h_peak = int(df.loc[mask]["Players"].max())
 
-            if playerCount > cacheFile['peak_all_time']:
-                file_manager.updateJson(config.CACHE_FILE_PATH, playerCount, cache_key_list[16])
-                send_alert(playerCount, cache_key_list[16])
-
-            if devCount > cacheFile['dev_all_time_peak']:
-                file_manager.updateJson(config.CACHE_FILE_PATH, devCount, cache_key_list[14])
-                send_alert(devCount, cache_key_list[14])
+            if player_24h_peak != cacheFile["player_24h_peak"]:
+                file_manager.updateJson(
+                    config.CACHE_FILE_PATH,
+                    player_24h_peak,
+                    "player_24h_peak",
+                )
 
             time.sleep(40)
 
         except Exception as e:
-            print(f'\n> Error in the main thread:\n\n{e}\n')
+            print(f"\n> Error in the main thread:\n\n{e}\n")
+            time.sleep(40)
 
 
 def unique_monthly():
     while True:
-            print('\nChecking monthly unique players..\n')
+        print("\nChecking monthly unique players..\n")
 
-            try:
-                newValue = month_unique.get_unique()
-            except Exception as e:
-                print(f'\n> Error while gathering monthly players:\n\n{e}\n')
-                time.sleep(45)
-                continue
+        try:
+            data = month_unique.get_unique()
+        except Exception as e:
+            print(f"\n> Error while gathering monthly players:\n\n{e}\n")
+            time.sleep(45)
+            continue
 
-            cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-            uniqueMonthly = cacheFile['unique_monthly']
+        cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
 
-            if newValue != uniqueMonthly:
-                file_manager.updateJson(config.CACHE_FILE_PATH, newValue, 'unique_monthly')
+        if data["monthly_unique_players"] != cacheFile["monthly_unique_players"]:
+            file_manager.updateJson(
+                config.CACHE_FILE_PATH,
+                data["monthly_unique_players"],
+                "monthly_unique_players",
+            )
 
-            time.sleep(86400)
+        time.sleep(86400)
 
 
-def send_alert(newVal, key):
+def check_currency():
+    while True:
+        print("\nChecking key price..\n")
+
+        try:
+            newValue = currency.get_currency()
+        except Exception as e:
+            print(f"\n> Error while gathering key price:\n\n{e}\n")
+            time.sleep(45)
+            continue
+
+        cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
+        prices = cacheFile["key_price"]
+
+        if newValue != prices:
+            file_manager.updateJson(config.CACHE_FILE_PATH, newValue, "key_price")
+
+        time.sleep(86400)
+
+
+def send_alert(newVal):
     bot = telebot.TeleBot(config.BOT_TOKEN)
-    if key == 'dev_all_time_peak':
-        text = strings.notiNewDevPeak_ru.format(newVal)
-    else:
-        text = strings.notiNewPlayerPeak_ru.format(newVal)
+    text = notifications.playersPeak.format(newVal)
 
     if not config.TEST_MODE:
         chat_list = [config.CSGOBETACHAT, config.AQ]
@@ -102,18 +112,22 @@ def send_alert(newVal, key):
         chat_list = [config.AQ]
 
     for chatID in chat_list:
-        msg = bot.send_message(chatID, text, parse_mode='html')
+        msg = bot.send_message(chatID, text, parse_mode="html")
         if chatID != config.AQ:
-            bot.pin_chat_message(msg.chat.id, msg.id,
-                                 disable_notification=True)
+            bot.pin_chat_message(msg.chat.id, msg.id, disable_notification=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.basicConfig(
-        level=logging.DEBUG, format='%(asctime)s | %(threadName)s: %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
+        level=logging.INFO,
+        format="%(asctime)s | %(threadName)s: %(message)s",
+        datefmt="%H:%M:%S — %d/%m/%Y",
+    )
 
-    t1 = Thread(target = unique_monthly)
-    t2 = Thread(target = info_updater)
+    t1 = Thread(target=info_updater)
+    t2 = Thread(target=unique_monthly)
+    t3 = Thread(target=check_currency)
 
     t1.start()
     t2.start()
+    t3.start()

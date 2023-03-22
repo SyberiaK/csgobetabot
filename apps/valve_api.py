@@ -1,57 +1,43 @@
-import requests
 import config
+import requests
 
-
-API_server_status = f'https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.STEAM_API_KEY}'
-API_csgo_players = f'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid={config.CSGO_APP_ID}'
-API_dev_players = f'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1?appid={config.CSGO_BETA_APP_ID}'
+API_server_status = f"https://api.steampowered.com/ICSGOServers_730/GetGameServersStatus/v1?key={config.STEAM_API_KEY}"
 
 
 class ValveServersAPI:
     def get_status(self):
+        status = {
+            "webapi": "unknown",
+            "api_timestamp": "unknown",
+            "sessions_logon": "unknown",
+            "steam_community": "unknown",
+            "matchmaking_scheduler": "unknown",
+            "online_servers": "unknown",
+            "active_players": "unknown",
+            "searching_players": "unknown",
+            "search_seconds_avg": "unknown",
+            "datacenters": "unknown",
+        }
+
         try:
-            response = requests.get(API_server_status)
+            response = requests.get(API_server_status, timeout=15)
             if response.status_code == 200:
-                webapi_status = 'normal'
+                webapi_status = "normal"
             else:
-                webapi_status = 'unknown'
-            result = response.json()['result']
+                webapi_status = "unknown"
+            result = response.json()["result"]
 
-            timestamp = result['app']['timestamp']
-            datacenters = result['datacenters']
+            status["webapi"] = webapi_status
+            status["api_timestamp"] = result["app"]["timestamp"]
+            status["sessions_logon"] = result["services"]["SessionsLogon"]
+            status["steam_community"] = result["services"]["SteamCommunity"]
+            status["matchmaking_scheduler"] = result["matchmaking"]["scheduler"]
+            status["online_servers"] = result["matchmaking"]["online_servers"]
+            status["active_players"] = result["matchmaking"]["online_players"]
+            status["searching_players"] = result["matchmaking"]["searching_players"]
+            status["search_seconds_avg"] = result["matchmaking"]["search_seconds_avg"]
+            status["datacenters"] = result["datacenters"]
 
-            sessionsLogon = result['services']['SessionsLogon']
-            steam_community = result['services']['SteamCommunity']
-
-            matchmaking = result['matchmaking']
-            scheduler = matchmaking['scheduler']
-            online_servers = matchmaking['online_servers']
-            active_players = matchmaking['online_players']
-            searching_players = matchmaking['searching_players']
-            search_seconds_avg = matchmaking['search_seconds_avg']
-
-            return webapi_status, sessionsLogon, steam_community, scheduler, timestamp, online_servers, active_players, search_seconds_avg, searching_players, datacenters
+            return status
         except:
-            webapi_status = scheduler = sessionsLogon = steam_community = datacenters = 'unknown'
-            timestamp = online_servers = active_players = search_seconds_avg = searching_players = 0
-            return webapi_status, sessionsLogon, steam_community, scheduler, timestamp, online_servers, active_players, search_seconds_avg, searching_players, datacenters
-
-    def get_players(self):
-        try:
-            response = requests.get(API_csgo_players)
-            data = response.json()
-            player_count = data['response']['player_count']
-            return player_count
-        except:
-            player_count = 0
-            return player_count
-
-    def get_devs(self):
-        try:
-            response = requests.get(API_dev_players)
-            data = response.json()
-            dev_player_count = data['response']['player_count']
-            return dev_player_count
-        except:
-            dev_player_count = 0
-            return dev_player_count
+            return status

@@ -4,10 +4,10 @@ import os
 import sys
 
 
-def save(path, data_str, mode='w'):
+def save(path, data_str, mode="w"):
     path = ensureAbsPath(path)
     try:
-        with io.open(path, mode, encoding='utf-8') as f:
+        with io.open(path, mode, encoding="utf-8") as f:
             f.write(str(data_str))
     except IOError:
         directory = os.path.dirname(path)
@@ -19,7 +19,7 @@ def save(path, data_str, mode='w'):
         if os.path.isdir(directory):
             return save(path, data_str, mode)
         else:
-            print(f'Could not write to {path}')
+            print(f"Could not write to {path}")
             return False
     else:
         return True
@@ -28,29 +28,23 @@ def save(path, data_str, mode='w'):
 def read(path):
     path = ensureAbsPath(path)
     try:
-        fileContents = ''
+        fileContents = ""
         with open(path) as f:
             fileContents = f.read()
         return fileContents
     except IOError:
-        print(f'Could not find or open file: {path}')
+        print(f"Could not find or open file: {path}")
         return False
 
 
 def ensureAbsPath(path):
-    botRootDir = os.path.dirname(os.path.abspath(sys.argv[0])) + '/'
+    botRootDir = f"{os.path.dirname(os.path.abspath(sys.argv[0]))}/"
     return path if os.path.isabs(path) else botRootDir + path
 
 
 def saveJson(path, data):
     return save(
-        path,
-        json.dumps(
-            data,
-            ensure_ascii=False,
-            indent=4,
-            separators=(',', ': ')
-        )
+        path, json.dumps(data, ensure_ascii=False, indent=4, separators=(",", ": "))
     )
 
 
@@ -60,14 +54,14 @@ def readJson(path):
         try:
             return json.loads(f)
         except ValueError:
-            print(f'Could not parse JSON file: {path}')
+            print(f"Could not parse JSON file: {path}")
             return False
     else:
         return False
 
 
 def updateJson(path, v, k):
-    jsonFile = open(path, 'r')
+    jsonFile = open(path, "r")
     data = json.load(jsonFile)
     jsonFile.close()
 

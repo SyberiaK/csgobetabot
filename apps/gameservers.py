@@ -1,31 +1,26 @@
-import sys
-import os
-import inspect
-currentdir = os.path.dirname(os.path.abspath(
-    inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir)
-
+import env
 import gevent.monkey
+
 gevent.monkey.patch_all()
 
-
-import time
 import logging
+import time
 from threading import Thread
-from steam.enums import EResult
-from steam.client import SteamClient
-from csgo.client import CSGOClient
-import telebot
-
 
 import config
-from addons import file_manager, strings
+import telebot
+from addons import file_manager
+from csgo.client import CSGOClient
+from steam.client import SteamClient
+from steam.enums import EResult
+from strings import notifications
 from web import GameVersion
 
-
 logging.basicConfig(
-    level=logging.DEBUG, format='%(asctime)s | %(threadName)s | %(name)s: %(message)s', datefmt='%H:%M:%S — %d/%m/%Y')
+    level=logging.INFO,
+    format="%(asctime)s | %(threadName)s | %(name)s: %(message)s",
+    datefmt="%H:%M:%S — %d/%m/%Y",
+)
 
 
 client = SteamClient()
@@ -64,106 +59,99 @@ def handle_disconnect():
         client.reconnect(maxdelay=30)
 
 
-@cs.on('connection_status')
+@cs.on("connection_status")
 def gc_ready(status):
     if status == 0:
-        game_coordinator = 'normal'
+        game_coordinator = "normal"
     elif status == 1:
-        game_coordinator = 'internal server error'
+        game_coordinator = "internal server error"
     elif status == 2:
-        game_coordinator = 'internal bot error'
+        game_coordinator = "offline"
     elif status == 3:
-        game_coordinator = 'reloading'
+        game_coordinator = "reloading"
     elif status == 4:
-        game_coordinator = 'internal Steam error'
+        game_coordinator = "internal Steam error"
     else:
-        game_coordinator = 'unknown'
+        game_coordinator = "unknown"
 
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    cache_key_list = []
-    for keys, values in cacheFile.items():
-        cache_key_list.append(keys)
 
-    if game_coordinator != cacheFile['game_coordinator']:
+    if game_coordinator != cacheFile["game_coordinator"]:
         file_manager.updateJson(
-            config.CACHE_FILE_PATH, game_coordinator, cache_key_list[2])
+            config.CACHE_FILE_PATH, game_coordinator, "game_coordinator"
+        )
 
 
 @client.on("logged_on")
 def handle_after_logon():
-    t1 = Thread(target = depots)
+    t1 = Thread(target=depots)
     t1.start()
-    t2 = Thread(target = gc)
+    t2 = Thread(target=gc)
     t2.start()
+    t3 = Thread(target=online_players)
+    t3.start()
 
 
 def depots():
     while True:
         try:
+            for keys, values in client.get_product_info(apps=[740], timeout=15).items():
+                for k, v in values.items():
+                    DSBuildID = int(v["depots"]["branches"]["public"]["buildid"])
+
+            for keys, values in client.get_product_info(apps=[741], timeout=15).items():
+                for k, v in values.items():
+                    ValveDSChangeNumber = v["_change_number"]
+
+            for keys, values in client.get_product_info(apps=[745], timeout=15).items():
+                for k, v in values.items():
+                    SDKBuildID = int(v["depots"]["branches"]["public"]["buildid"])
+
             for keys, values in client.get_product_info(apps=[730], timeout=15).items():
                 for k, v in values.items():
-                    try:
-                        currentRKVBuild = v['depots']['branches']['rkvtest']['buildid']
-                    except Exception as e:
-                        print(f'\n> Error fetching RKV build:\n\n{e}\n')
-                    try:
-                        currentTestBuild = v['depots']['branches']['test']['buildid']
-                    except Exception as e:
-                        print(f'\n> Error fetching Test build:\n\n{e}\n')
-                    try:
-                        currentPLXBuild = v['depots']['branches']['plxtest']['buildid']
-                    except Exception as e:
-                        print(f'\n> Error fetching PLX build:\n\n{e}\n')
-                    try:
-                        currentDECKBuild = v['depots']['branches']['steamdeck']['buildid']
-                    except Exception as e:
-                        print(f'\n> Error fetching Steam Deck build:\n\n{e}\n')
-                    currentDPRBuild = v['depots']['branches']['dpr']['buildid']
-                    currentPublicBuild = v['depots']['branches']['public']['buildid']
+                    DPRBuildID = int(v["depots"]["branches"]["dpr"]["buildid"])
+                    DPRPBuildID = int(v["depots"]["branches"]["dprp"]["buildid"])
+                    PublicBuildID = int(v["depots"]["branches"]["public"]["buildid"])
 
         except Exception as e:
-            print(f'\n> Error trying to fetch depots:\n\n{e}\n')
+            print(f"\n> Error trying to fetch depots:\n\n{e}\n")
             time.sleep(45)
             continue
 
         cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-        cache_key_list = []
-        for keys, values in cacheFile.items():
-            cache_key_list.append(keys)
 
-        if currentDPRBuild != cacheFile['dpr_build_ID']:
+        if SDKBuildID != cacheFile["sdk_build_id"]:
+            file_manager.updateJson(config.CACHE_FILE_PATH, SDKBuildID, "sdk_build_id")
+            send_alert(SDKBuildID, "sdk_build_id")
+
+        if DSBuildID != cacheFile["ds_build_id"]:
+            file_manager.updateJson(config.CACHE_FILE_PATH, DSBuildID, "ds_build_id")
+            send_alert(DSBuildID, "ds_build_id")
+
+        if ValveDSChangeNumber != cacheFile["valve_ds_changenumber"]:
             file_manager.updateJson(
-                config.CACHE_FILE_PATH, currentDPRBuild, cache_key_list[1])
-            send_alert(currentDPRBuild, cache_key_list[1])
-            t3 = Thread(target = ds)
+                config.CACHE_FILE_PATH, ValveDSChangeNumber, "valve_ds_changenumber"
+            )
+            send_alert(ValveDSChangeNumber, "valve_ds_changenumber")
+
+        if DPRPBuildID != cacheFile["dprp_build_id"]:
+            file_manager.updateJson(config.CACHE_FILE_PATH, DPRPBuildID, "dprp_build_id")
+            send_alert(DPRPBuildID, "dprp_build_id")
+
+        if DPRBuildID != cacheFile["dpr_build_id"]:
+            file_manager.updateJson(config.CACHE_FILE_PATH, DPRBuildID, "dpr_build_id")
+            if DPRBuildID == cacheFile["public_build_id"]:
+                send_alert(DPRBuildID, "dpr_build_sync_id")
+            else:
+                send_alert(DPRBuildID, "dpr_build_id")
+
+        if PublicBuildID != cacheFile["public_build_id"]:
+            file_manager.updateJson(
+                config.CACHE_FILE_PATH, PublicBuildID, "public_build_id"
+            )
+            send_alert(PublicBuildID, "public_build_id")
+            t3 = Thread(target=gv_updater)
             t3.start()
-
-        if currentPublicBuild != cacheFile['public_build_ID']:
-            file_manager.updateJson(
-                config.CACHE_FILE_PATH, currentPublicBuild, cache_key_list[0])
-            send_alert(currentPublicBuild, cache_key_list[0])
-            t4 = Thread(target = gv_updater)
-            t4.start()
-
-        if currentRKVBuild != cacheFile['rkvtest']:
-            file_manager.updateJson(
-                config.CACHE_FILE_PATH, currentRKVBuild, cache_key_list[25])
-            send_alert(currentRKVBuild, cache_key_list[25])
-
-        if currentTestBuild != cacheFile['test']:
-            file_manager.updateJson(
-                config.CACHE_FILE_PATH, currentTestBuild, cache_key_list[26])
-            send_alert(currentTestBuild, cache_key_list[26])
-
-        if currentPLXBuild != cacheFile['plx']:
-            file_manager.updateJson(
-                config.CACHE_FILE_PATH, currentPLXBuild, cache_key_list[27])
-            send_alert(currentPLXBuild, cache_key_list[27])
-
-        if currentDECKBuild != cacheFile['steamdeck']:
-            file_manager.updateJson(
-                config.CACHE_FILE_PATH, currentDECKBuild, cache_key_list[28])
-            send_alert(currentDECKBuild, cache_key_list[28])
 
         time.sleep(45)
 
@@ -172,95 +160,72 @@ def gc():
     cs.launch()
 
 
-def ds():
-    timeout = time.time() + 60*90
-    while True:
-        try:
-            for keys, values in client.get_product_info(apps=[741], timeout=15).items():
-                for k, v in values.items():
-                    currentDSchangenumber = v['_change_number']
-
-        except Exception as e:
-            print(f'\n> First DS run error:\n\n{e}\n')
-            time.sleep(45)
-            continue
-
-        while True:
-            try:
-                for keys, values in client.get_product_info(apps=[741], timeout=15).items():
-                    for k, v in values.items():
-                        newDSchangenumber = v['_change_number']
-
-            except Exception as e:
-                print(f'\n> Second DS run error:\n\n{e}\n')
-                time.sleep(45)
-                continue
-
-            if newDSchangenumber != currentDSchangenumber:
-                send_alert(newDSchangenumber, 'ds')
-                sys.exit()
-
-            elif time.time() > timeout:
-                sys.exit()
-
-            time.sleep(45)
-
-
 def gv_updater():
     while True:
         try:
-            newValue = gv.get_gameVer()
+            data = gv.get_gameVer()
 
         except Exception as e:
-            print(f'\n> Error trying to get new version:\n\n{e}\n')
+            print(f"\n> Error trying to get new version:\n\n{e}\n")
             time.sleep(45)
             continue
 
         cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-        oldVersion = cacheFile['client_version']
-        keyList = ['client_version', 'server_version', 'patch_version', 'version_timestamp']
 
-        if newValue[0] != oldVersion:
-            for val, key in zip(newValue, keyList):
-                file_manager.updateJson(
-                    config.CACHE_FILE_PATH, val, key)
+        if data["client_version"] != cacheFile["client_version"]:
+            for key, value in data.items():
+                for cachedKey, cachedValue in cacheFile.items():
+                    if key == cachedKey:
+                        if value != cachedValue:
+                            file_manager.updateJson(config.CACHE_FILE_PATH, value, key)
             sys.exit()
 
         time.sleep(45)
 
-def send_alert(newVal, key):
-    if key == 'public_build_ID':
-        text = strings.notificationTextUPD.format(newVal)
-    elif key == 'dpr_build_ID':
-        text = strings.notificationTextDPR.format(newVal)
-    elif key == 'rkvtest':
-        text = strings.notificationTextRKV.format(newVal)
-    elif key == 'test':
-        text = strings.notificationTextTST.format(newVal)
-    elif key == 'ds':
-        text = strings.notificationTextDS.format(newVal)
-    elif key == 'plx':
-        text = strings.notificationTextPLX.format(newVal)
-    elif key == 'steamdeck':
-        text = strings.notificationTextDeck.format(newVal)
+def online_players():
+    while True:
+        value = client.get_player_count(730)
+        cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
 
+        if value != cacheFile["online_players"]:
+            file_manager.updateJson(config.CACHE_FILE_PATH, value, "online_players")
+
+        time.sleep(45)
+
+
+def send_alert(newVal, key):
     bot = telebot.TeleBot(config.BOT_TOKEN)
+
+    if key == "public_build_id":
+        text = notifications.publicBuild.format(newVal)
+    elif key == "dpr_build_id":
+        text = notifications.dprBuild.format(newVal)
+    elif key == "dprp_build_id":
+        text = notifications.dprpBuild.format(newVal)
+    elif key == "dpr_build_sync_id":
+        text = f"{notifications.dprBuild.format(newVal)} 🔃"
+    elif key == "sdk_build_id":
+        text = notifications.sdkBuild.format(newVal)
+    elif key == "ds_build_id":
+        text = notifications.dsBuild.format(newVal)
+    elif key == "valve_ds_changenumber":
+        text = notifications.valveDS.format(newVal)
+
     if not config.TEST_MODE:
-        chat_list = [config.CSGOBETACHAT, config.CSGONOTIFY, config.AQ]
+        chat_list = [config.CSGOBETACHAT, config.CSGONOTIFY]
     else:
         chat_list = [config.AQ]
 
     for chatID in chat_list:
         msg = bot.send_message(
-            chatID, text, parse_mode='html', disable_web_page_preview=True)
+            chatID, text, parse_mode="html", disable_web_page_preview=True
+        )
         if chatID == config.CSGOBETACHAT:
-            bot.pin_chat_message(msg.chat.id, msg.id,
-                                 disable_notification=True)
+            bot.pin_chat_message(msg.chat.id, msg.id, disable_notification=True)
 
 
 try:
-    result = client.login(username=config.STEAM_USERNAME,
-                     password=config.STEAM_PASS)
+    result = client.login(username=config.STEAM_USERNAME, password=config.STEAM_PASS)
 
     if result != EResult.OK:
         print(f"\n> Failed to login: {repr(result)}\n")
