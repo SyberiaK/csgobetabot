@@ -26,7 +26,7 @@ west_eu_en = """🇩🇪 Germanyʼs DC status:
 
 🇪🇸 Spainʼs DC status:
 
-• Location: Mardid
+• Location: Madrid
 • Load: {}
 • Capacity: {}"""
 
