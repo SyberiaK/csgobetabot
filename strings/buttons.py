@@ -40,13 +40,13 @@ markup_ss_en.add(server_status_en, matchmaking_en, dc_en, back_button_en)
 # Profile Information
 markup_profile_en = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
 profile_info_en = KeyboardButton("Bans and restrictions")
-csgo_stats_en = KeyboardButton("CS:GO in-game statistics")
+csgo_stats_en = KeyboardButton("CS in-game statistics")
 markup_profile_en.add(profile_info_en, csgo_stats_en, back_button_en)
 
 # Extra Features
 markup_extra_en = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 crosshair_en = KeyboardButton("🆕 Crosshair")
-currency_en = KeyboardButton("🆕 CS:GO exchange rate")
+currency_en = KeyboardButton("🆕 CS exchange rate")
 valvetime_en = KeyboardButton("Time in Valve HQ")
 timer_en = KeyboardButton("Cap reset")
 gv_en = KeyboardButton("Game version")
@@ -185,7 +185,7 @@ back_button_ru = KeyboardButton("⏪ Назад")
 # Channel link for inline messages
 markup_inline_button_ru = InlineKeyboardMarkup()
 inline_button_channel_link_ru = InlineKeyboardButton(
-    "🔫 Обновления CS:GO", "https://t.me/csgobeta"
+    "🔫 Обновления Counter-Strike", "https://t.me/csgobeta"
 )
 markup_inline_button_ru.add(inline_button_channel_link_ru)
 
@@ -206,13 +206,13 @@ markup_ss_ru.add(server_status_ru, mathcmaking_ru, dc_ru, back_button_ru)
 # Profile information RU
 markup_profile_ru = ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
 profile_info_ru = KeyboardButton("Запреты и ограничения")
-csgo_stats_ru = KeyboardButton("Игровая статистика CS:GO")
+csgo_stats_ru = KeyboardButton("Игровая статистика CS")
 markup_profile_ru.add(profile_info_ru, csgo_stats_ru, back_button_ru)
 
 # Extra Features RU
 markup_extra_ru = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 crosshair_ru = KeyboardButton("🆕 Прицел")
-currency_ru = KeyboardButton("🆕 Курс CS:GO")
+currency_ru = KeyboardButton("🆕 Курс CS")
 valvetime_ru = KeyboardButton("Время в штаб-кв. Valve")
 gv_ru = KeyboardButton("Версия игры")
 guns_ru = KeyboardButton("База данных оружий")

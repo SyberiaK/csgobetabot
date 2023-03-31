@@ -117,7 +117,7 @@ def extra_features_process(message):
     log(message)
     if message.text.lower() in ("🆕 crosshair", "🆕 прицел"):
         crosshair(message)
-    elif message.text.lower() in ("🆕 cs:go exchange rate", "🆕 курс cs:go"):
+    elif message.text.lower() in ("🆕 cs exchange rate", "🆕 курс cs"):
         send_exchange_rate(message)
     elif message.text.lower() in ("time in valve hq", "время в штаб-кв. valve"):
         send_valvetime(message)
@@ -526,8 +526,8 @@ def profile_info_process(message):
         temptag = "bans"
         url(message, temptag)
     elif message.text.lower() in (
-        "cs:go in-game statistics",
-        "игровая статистика cs:go",
+        "cs in-game statistics",
+        "игровая статистика cs",
     ):
         temptag = "stats"
         url(message, temptag)
@@ -1489,7 +1489,7 @@ def inline_cur(inline_query):
                 results.append(
                     telebot.types.InlineQueryResultArticle(
                         1,
-                        "Стоимость одного ключа от кейса CS:GO",
+                        "Стоимость одного ключа от кейса CS",
                         input_message_content=telebot.types.InputTextMessageContent(
                             "Опробуйте @csgobetabot в инлайн-режиме!", parse_mode="html"
                         ),
@@ -1512,10 +1512,10 @@ def inline_cur(inline_query):
                         2,
                         "Выбранная валюта: {}".format(tags.currency_names_ru[currency]),
                         input_message_content=telebot.types.InputTextMessageContent(
-                            f"1 ключ CS:GO стоит {value} {currency}",
+                            f"1 ключ CS стоит {value} {currency}",
                             parse_mode="html",
                         ),
-                        description=f"1 ключ CS:GO стоит {value} {currency}",
+                        description=f"1 ключ CS стоит {value} {currency}",
                     )
                 )
             else:
@@ -1536,7 +1536,7 @@ def inline_cur(inline_query):
                 results.append(
                     telebot.types.InlineQueryResultArticle(
                         1,
-                        "Price of one CS:GO case key",
+                        "Price of one CS case key",
                         input_message_content=telebot.types.InputTextMessageContent(
                             "Try out @csgobetabot inline!", parse_mode="html"
                         ),
@@ -1561,10 +1561,10 @@ def inline_cur(inline_query):
                             tags.currency_names_en[currency]
                         ),
                         input_message_content=telebot.types.InputTextMessageContent(
-                            f"1 CS:GO key is {value} {currency}",
+                            f"1 CS key is {value} {currency}",
                             parse_mode="html",
                         ),
-                        description=f"1 CS:GO key is {value} {currency}",
+                        description=f"1 CS key is {value} {currency}",
                     )
                 )
             else:

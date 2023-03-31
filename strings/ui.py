@@ -2,7 +2,7 @@
 # English
 
 cmdStart_en = """👋🏼 Hey, {}!
-This bot is designed to check the number of online players and the availability of CS:GO servers.
+This bot is designed to check the number of online players and the availability of Counter-Strike servers.
 
 For more information type /help."""
 cmdHelp_en = """<a href="https://telegra.ph/Detailed-description-03-07">‎</a>ℹ️ This bot is developed by @csgobeta. You can see the source code on <a href="https://github.com/csgobeta/csgobetabot">GitHub</a>.
@@ -14,7 +14,7 @@ Use /cancel to cancel this command."""
 
 # Russian
 cmdStart_ru = """👋🏼 Привет, {}!
-Этот бот предназначен для проверки количества онлайн игроков и доступности CS:GO серверов.
+Этот бот предназначен для проверки количества онлайн игроков и доступности серверов Counter-Strike.
 
 Для большей информации воспользуйтесь /help."""
 cmdHelp_ru = """<a href="https://telegra.ph/Podrobnoe-opisanie-03-07">‎</a>ℹ️ Этот бот разработан каналом @csgobeta. Исходный код можно найти на <a href="https://github.com/csgobeta/csgobetabot">GitHub</a>.
@@ -33,9 +33,9 @@ last_upd_en = """Last data update: {}"""
 last_upd_ru = """Последнее обновление данных: {}"""
 
 
-### Text for CS:GO Status
+### Text for Counter-Strike Status
 # English
-status_en = """{} <b>CS:GO service status:</b>
+status_en = """{} <b>Counter-Strike service status:</b>
 
 • Game coordinator: {}
 • Server connection: {}
@@ -44,7 +44,7 @@ status_en = """{} <b>CS:GO service status:</b>
 • Steam web API: {}"""
 
 # Russian
-status_ru = """{} <b>Состояние служб CS:GO:</b>
+status_ru = """{} <b>Состояние служб Counter-Strike:</b>
 
 • Игровой координатор: {}
 • Подключение к серверам: {}
@@ -109,16 +109,14 @@ timer_ru = "⏳ Время до сброса ограничений опыта �
 # English
 gameversion_en = """⚙️ Current game version: <code>{}</code> <code>({})</code>
 
-Latest CS:GO update: {}
-
-ℹ️ CS:GO Update Tracker (Russian): <a href="http://t.me/csgotracker/7">@csgotracker</a>"""
+Latest Counter-Strike update: {}"""
 
 # Russian
 gameversion_ru = """⚙️ Текущая версия игры: <code>{}</code> <code>({})</code>
 
-Последнее обновление CS:GO: {}
+Последнее обновление Counter-Strike: {}
 
-ℹ️ Трекер обновлений CS:GO: <a href="http://t.me/csgotracker/7">@csgotracker</a>"""
+ℹ️ Трекер обновлений Counter-Strike: <a href="http://t.me/cstracker/7">@cstracker</a>"""
 
 
 ### URL examples
@@ -141,7 +139,7 @@ url_ex_ru = """🔗 Пожалуйста, введите один из след�
 Используйте /cancel, чтобы отменить команду."""
 
 
-### CS:GO Xhair code examples
+### Counter-Strike Xhair code examples
 # English
 xhair_decode_en = """📖 Please, enter the crosshair code that you would like to decode (ex: <code>CSGO-O4Jsi-V36wY-rTMGK-9w7qF-jQ8WB</code>).
 
@@ -165,7 +163,7 @@ bans_en = """🔍 <b>General profile information:</b>
 
 • Steam friend code: <code>{}</code>
 • Steam invite URL: {}
-• CS:GO friend code: <code>{}</code>
+• Counter-Strike friend code: <code>{}</code>
 
 🔫 <b>FACEIT:</b>
 
@@ -191,7 +189,7 @@ bans_ru = """🔍 <b>Общая информация профиля:</b>
 
 • Код друга Steam: <code>{}</code>
 • Пригласительная ссылка Steam: {}
-• Код друга CS:GO: <code>{}</code>
+• Код друга Counter-Strike: <code>{}</code>
 
 🔫 <b>FACEIT:</b>
 
@@ -212,9 +210,7 @@ bans_ru = """🔍 <b>Общая информация профиля:</b>
 unknownRequest_en = "⚠️ Nothing found, please use one of the following buttons:"
 
 # Russian
-unknownRequest_ru = (
-    "⚠️ Ничего не найдено, пожалуйста, воспользуйтесь одной из приведённых кнопок:"
-)
+unknownRequest_ru = "⚠️ Ничего не найдено, пожалуйста, воспользуйтесь одной из приведённых кнопок:"
 
 
 ### Text for Steam maintenance
@@ -222,9 +218,7 @@ unknownRequest_ru = (
 maintenance_en = "🛠️ <b>Steam is down for routine maintenance every Tuesday.</b>"
 
 # Russian
-maintenance_ru = (
-    "🛠️ <b>Steam отключается на плановое техобслуживание каждый вторник.</b>"
-)
+maintenance_ru = "🛠️ <b>Steam отключается на плановое техобслуживание каждый вторник.</b>"
 
 
 ### Text if Something's is wrong
@@ -288,7 +282,7 @@ gun_data_ru = """🗂 Детальная информация про {}:
 
 ### Text for Guns
 # English
-exchange_rate_en = """💸 Price of one CS:GO case key:
+exchange_rate_en = """💸 Price of one Counter-Strike case key:
 
 🇺🇸 USD: $ {}
 🇬🇧 GBP: £ {}
@@ -332,7 +326,7 @@ exchange_rate_en = """💸 Price of one CS:GO case key:
 """
 
 # Russian
-exchange_rate_ru = """💸 Стоимость одного ключа от кейса CS:GO:
+exchange_rate_ru = """💸 Стоимость одного ключа от кейса Counter-Strike:
 
 🇺🇸 USD: $ {}
 🇬🇧 GBP: £ {}
