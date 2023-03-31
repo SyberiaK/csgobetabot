@@ -38,12 +38,12 @@ valveDS = """🖥 <a href="https://t.me/cstracker/26">Выделенные се�
 
 ### Text for Workshop Changes
 # Single
-newMap = """<a href="https://steamcommunity.com/sharedfiles/filedetails/?id={}">‎</a>🆕 Официальный аккаунт Counter-Strike загрузил карту <b>{}</b> <a href="https://t.me/csgotracker/29">в Мастерскую Steam</a>.
+newMap = """<a href="https://steamcommunity.com/sharedfiles/filedetails/?id={}">‎</a>🆕 Официальный аккаунт Counter-Strike загрузил карту <b>{}</b> <a href="https://t.me/cstracker/29">в Мастерскую Steam</a>.
 
 🔗 steamcommunity.com/sharedfiles/filedetails/?id={}"""
 
 # Multiple
-newMaps = """<a href="https://steamcommunity.com/profiles/76561198082857351/myworkshopfiles/?appid=730">‎</a>🆕 Официальный аккаунт Counter-Strike загрузил карты <b>{}</b> <a href="https://t.me/csgotracker/29">в Мастерскую Steam</a>.
+newMaps = """<a href="https://steamcommunity.com/profiles/76561198082857351/myworkshopfiles/?appid=730">‎</a>🆕 Официальный аккаунт Counter-Strike загрузил карты <b>{}</b> <a href="https://t.me/cstracker/29">в Мастерскую Steam</a>.
 
 🔗 steamcommunity.com/profiles/76561198082857351/myworkshopfiles/?appid=730"""
 
