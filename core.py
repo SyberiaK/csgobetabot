@@ -35,7 +35,7 @@ def info_updater():
                 file_manager.updateJson(
                     config.CACHE_FILE_PATH, cacheFile["online_players"], "player_alltime_peak"
                 )
-                send_alert(cacheFile["online_players"])
+                send_alert(cacheFile["online_players"], "online_players")
 
             df = pd.read_csv(config.PLAYER_CHART_FILE_PATH, parse_dates=["DateTime"])
             end_date = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
@@ -73,6 +73,7 @@ def unique_monthly():
         cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
 
         if data["monthly_unique_players"] != cacheFile["monthly_unique_players"]:
+            send_alert([cacheFile["monthly_unique_players"], data["monthly_unique_players"]], "monthly_unique_players")
             file_manager.updateJson(
                 config.CACHE_FILE_PATH,
                 data["monthly_unique_players"],
@@ -102,9 +103,12 @@ def check_currency():
         time.sleep(86400)
 
 
-def send_alert(newVal):
+def send_alert(newVal, key):
     bot = telebot.TeleBot(config.BOT_TOKEN)
-    text = notifications.playersPeak.format(newVal)
+    if key == "online_players":
+        text = notifications.playersPeak.format(newVal)
+    else:
+        text = notifications.monthlyUnique.format(newVal[0], newVal[1])
 
     if not config.TEST_MODE:
         chat_list = [config.CSGOBETACHAT, config.AQ]
