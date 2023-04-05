@@ -111,7 +111,7 @@ def send_alert(newVal, key):
         text = notifications.monthlyUnique.format(newVal[0], newVal[1])
 
     if not config.TEST_MODE:
-        chat_list = [config.CSGOBETACHAT, config.AQ]
+        chat_list = [config.INCS2CHAT, config.AQ]
     else:
         chat_list = [config.AQ]
 

@@ -1164,8 +1164,8 @@ def delete_keyboard(message):
 
 @bot.message_handler(commands=["ban"])
 def ban(message):
-    if message.chat.id == config.CSGOBETACHAT:
-        admins = bot.get_chat_administrators(config.CSGOBETACHAT).wait()
+    if message.chat.id == config.INCS2CHAT:
+        admins = bot.get_chat_administrators(config.INCS2CHAT).wait()
         admins = [i.user.id for i in admins]
         if message.from_user.id in admins:
             if message.reply_to_message:
@@ -1191,8 +1191,8 @@ def ban(message):
 
 @bot.message_handler(commands=["unban"])
 def unban(message):
-    if message.chat.id == config.CSGOBETACHAT:
-        admins = bot.get_chat_administrators(config.CSGOBETACHAT).wait()
+    if message.chat.id == config.INCS2CHAT:
+        admins = bot.get_chat_administrators(config.INCS2CHAT).wait()
         admins = [i.user.id for i in admins]
         if message.from_user.id in admins:
             if message.reply_to_message:
@@ -1633,11 +1633,11 @@ def answer(message):
         else:
             if message.from_user.id == 777000:
                 if (
-                    message.forward_from_chat.id == config.CSGOBETACHANNEL
+                    message.forward_from_chat.id == config.INCS2CHANNEL
                     and "Обновлены файлы локализации" in message.text
                 ):
                     bot.send_sticker(
-                        config.CSGOBETACHAT,
+                        config.INCS2CHAT,
                         "CAACAgIAAxkBAAID-l_9tlLJhZQSgqsMUAvLv0r8qhxSAAIKAwAC-p_xGJ-m4XRqvoOzHgQ",
                         reply_to_message_id=message.message_id,
                     )

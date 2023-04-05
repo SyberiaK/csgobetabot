@@ -185,7 +185,7 @@ back_button_ru = KeyboardButton("⏪ Назад")
 # Channel link for inline messages
 markup_inline_button_ru = InlineKeyboardMarkup()
 inline_button_channel_link_ru = InlineKeyboardButton(
-    "🔫 Обновления Counter-Strike", "https://t.me/csgobeta"
+    "🔫 Обновления Counter-Strike", "https://t.me/INCS2"
 )
 markup_inline_button_ru.add(inline_button_channel_link_ru)
 

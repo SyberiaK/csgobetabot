@@ -5,7 +5,7 @@ cmdStart_en = """👋🏼 Hey, {}!
 This bot is designed to check the number of online players and the availability of Counter-Strike servers.
 
 For more information type /help."""
-cmdHelp_en = """<a href="https://telegra.ph/Detailed-description-03-07">‎</a>ℹ️ This bot is developed by @csgobeta. You can see the source code on <a href="https://github.com/csgobeta/csgobetabot">GitHub</a>.
+cmdHelp_en = """<a href="https://telegra.ph/Detailed-description-03-07">‎</a>ℹ️ This bot is developed by @INCS2. You can see the source code on <a href="https://github.com/csgobeta/csgobetabot">GitHub</a>.
 
 telegra.ph/Detailed-description-03-07"""
 cmdFeedback_en = """💬 Please, tell us about your <b>suggestions</b> or <b>problems</b> that you have encountered using our bot.
@@ -17,7 +17,7 @@ cmdStart_ru = """👋🏼 Привет, {}!
 Этот бот предназначен для проверки количества онлайн игроков и доступности серверов Counter-Strike.
 
 Для большей информации воспользуйтесь /help."""
-cmdHelp_ru = """<a href="https://telegra.ph/Podrobnoe-opisanie-03-07">‎</a>ℹ️ Этот бот разработан каналом @csgobeta. Исходный код можно найти на <a href="https://github.com/csgobeta/csgobetabot">GitHub</a>.
+cmdHelp_ru = """<a href="https://telegra.ph/Podrobnoe-opisanie-03-07">‎</a>ℹ️ Этот бот разработан каналом @INCS2. Исходный код можно найти на <a href="https://github.com/csgobeta/csgobetabot">GitHub</a>.
 
 telegra.ph/Podrobnoe-opisanie-03-07"""
 cmdFeedback_ru = """💬 Пожалуйста, расскажите о Ваших <b>пожеланиях</b> или <b>проблемах</b>, с которыми Вы столкнулись, используя бота.

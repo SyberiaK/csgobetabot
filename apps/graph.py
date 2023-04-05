@@ -94,7 +94,7 @@ def graph_maker():
                 plt.text(
                     0.156,
                     0.874,
-                    "Made by @csgobeta\nupd every 10 min",
+                    "Made by @INCS2\nupd every 10 min",
                     ha="center",
                     transform=ax.transAxes,
                     color="black",

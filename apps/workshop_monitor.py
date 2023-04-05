@@ -83,13 +83,13 @@ def send_alert(text):
     bot = telebot.TeleBot(config.BOT_TOKEN)
 
     if not config.TEST_MODE:
-        chat_list = [config.CSGOBETACHAT, config.CSGONOTIFY]
+        chat_list = [config.INCS2CHAT, config.CSTRACKER]
     else:
         chat_list = [config.AQ]
 
     for chatID in chat_list:
         msg = bot.send_message(chatID, text, parse_mode="html")
-        if chatID == config.CSGOBETACHAT:
+        if chatID == config.INCS2CHAT:
             bot.pin_chat_message(msg.chat.id, msg.id, disable_notification=True)
 
 
