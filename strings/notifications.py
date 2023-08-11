@@ -36,6 +36,18 @@ valveDS = """🖥 <a href="https://t.me/cstracker/26">Выделенные се�
 Номер изменения: <code>{}</code>"""
 
 
+### Text for CS2 App update
+cs2App = """🔐 <a href="https://t.me/cstracker/40">Неизвестное клиентское приложение CS2</a> было обновлено.
+
+Номер изменения: <code>{}</code>"""
+
+
+### Text for CS2 Server update
+cs2Server = """🔐 <a href="https://t.me/cstracker/40">Неизвестное серверное приложение CS2</a> было обновлено.
+
+Номер изменения: <code>{}</code>"""
+
+
 ### Text for Workshop Changes
 # Single
 newMap = """<a href="https://steamcommunity.com/sharedfiles/filedetails/?id={}">‎</a>🆕 Официальный аккаунт Counter-Strike загрузил карту <b>{}</b> <a href="https://t.me/cstracker/29">в Мастерскую Steam</a>.

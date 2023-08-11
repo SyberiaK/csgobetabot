@@ -628,7 +628,7 @@ def csgo_stats(data):
             if totalP90Hits != 0 and totalP90Shots != 0:
                 P90Accuracy = "{:.2f}".format(totalP90Hits / totalP90Shots * 100)
             else:
-                FamasAccuracy = 0
+                P90Accuracy = 0
 
             try:
                 totalFamasKills = list(
@@ -812,7 +812,7 @@ def csgo_stats(data):
             if totalNovaHits != 0 and totalNovaShots != 0:
                 NovaAccuracy = "{:.2f}".format(totalNovaHits / totalNovaShots * 100)
             else:
-                Mag7Accuracy = 0
+                NovaAccuracy = 0
 
             try:
                 totalMag7Kills = list(
@@ -1280,8 +1280,8 @@ def ban_info(data):
         if vanityURL == str(steamID):
             vanityURL = "not set"
             vanityURLR = "не указана"
-        else:
-            vanityURL = vanityURLR = f"<code>{vanityURL}</code>"
+        vanityURL = vanityURLR = f"<code>{vanityURL}</code>"
+
         accountID = SteamID(steam64).id
         steam2ID = SteamID(steam64).as_steam2
         steam3ID = SteamID(steam64).as_steam3
@@ -1291,6 +1291,13 @@ def ban_info(data):
         responseFaceit = requests.get(faceitAPI, timeout=15).json()["payload"][
             "results"
         ]
+
+        faceitURL = "not found"
+        faceitURLR = "не найдена"
+        faceitBan = faceitLVL = "none"
+        faceitBanR = faceitLVLR = "нет"
+        faceitELO = 0
+
         if responseFaceit:
             resultFaceit = list(
                 filter(
@@ -1309,60 +1316,33 @@ def ban_info(data):
                 if "csgo" in eloAPI:
                     if "faceit_elo" in eloAPI["csgo"]:
                         faceitELO = eloAPI["csgo"]["faceit_elo"]
-                    else:
-                        faceitELO = 0
 
-                if "banned" in resultFaceit[0]["status"]:
-                    faceitBan = "banned"
-                    faceitBanR = "заблокирован"
-                else:
-                    faceitBan = "none"
-                    faceitBanR = "нет"
+                if "status" in resultFaceit[0]:
+                    if "banned" in resultFaceit[0]["status"]:
+                        faceitBan = "banned"
+                        faceitBanR = "заблокирован"
 
                 for i in resultFaceit[0]["games"]:
                     if i["name"] == "csgo":
                         faceitLVL = faceitLVLR = f'{faceitELO} / {i["skill_level"]}'
-            else:
-                faceitURL = (
-                    faceitURLR
-                ) = f'https://faceit.com/en/players/{responseFaceit[0]["nickname"]}'
 
-                faceitLVL = "none"
-                faceitLVLR = "нет"
-
-                if "banned" in responseFaceit[0]["status"]:
-                    faceitBan = "banned"
-                    faceitBanR = "заблокирован"
-                else:
-                    faceitBan = "none"
-                    faceitBanR = "нет"
-        else:
-            faceitURL = "not found"
-            faceitURLR = "не найдена"
-
-            faceitBan = faceitLVL = "none"
-            faceitBanR = faceitLVLR = "нет"
-
+        vacBan = vacBanR = 0
         banData = requests.get(bans, timeout=15).json()["players"][0]
         if banData["VACBanned"]:
             vacBan = f'{banData["NumberOfVACBans"]} (days since last ban: {banData["DaysSinceLastBan"]})'
             vacBanR = f'{banData["NumberOfVACBans"]} (дней с момента последней блокировки: {banData["DaysSinceLastBan"]})'
-        else:
-            vacBan = 0
-            vacBanR = 0
         gameBans = banData["NumberOfGameBans"]
+
+        communityBan = tradeBan = "none"
+        communityBanR = tradeBanR = "нет"
+
         if banData["CommunityBanned"]:
             communityBan = "banned"
             communityBanR = "заблокирован"
-        else:
-            communityBan = "none"
-            communityBanR = "нет"
+
         if banData["EconomyBan"] == "banned":
             tradeBan = "banned"
             tradeBanR = "заблокирован"
-        else:
-            tradeBan = "none"
-            tradeBanR = "нет"
 
         bans_text_en = ui.bans_en.format(
             vanityURL,

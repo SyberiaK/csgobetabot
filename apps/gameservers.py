@@ -5,6 +5,7 @@ gevent.monkey.patch_all()
 
 import logging
 import time
+import sys
 from threading import Thread
 
 import config
@@ -103,6 +104,14 @@ def depots():
                 for k, v in values.items():
                     ValveDSChangeNumber = v["_change_number"]
 
+            for keys, values in client.get_product_info(apps=[2275500], timeout=15).items():
+                for k, v in values.items():
+                    CS2AppChangeNumber = v["_change_number"]
+
+            for keys, values in client.get_product_info(apps=[2275530], timeout=15).items():
+                for k, v in values.items():
+                    CS2ServerChangeNumber = v["_change_number"]
+
             for keys, values in client.get_product_info(apps=[745], timeout=15).items():
                 for k, v in values.items():
                     SDKBuildID = int(v["depots"]["branches"]["public"]["buildid"])
@@ -134,6 +143,18 @@ def depots():
             )
             send_alert(ValveDSChangeNumber, "valve_ds_changenumber")
 
+        if CS2AppChangeNumber != cacheFile["cs2_app_changenumber"]:
+            file_manager.updateJson(
+                config.CACHE_FILE_PATH, CS2AppChangeNumber, "cs2_app_changenumber"
+            )
+            send_alert(CS2AppChangeNumber, "cs2_app_changenumber")
+
+        if CS2ServerChangeNumber != cacheFile["cs2_server_changenumber"]:
+            file_manager.updateJson(
+                config.CACHE_FILE_PATH, CS2ServerChangeNumber, "cs2_server_changenumber"
+            )
+            send_alert(CS2ServerChangeNumber, "cs2_server_changenumber")
+
         if DPRPBuildID != cacheFile["dprp_build_id"]:
             file_manager.updateJson(config.CACHE_FILE_PATH, DPRPBuildID, "dprp_build_id")
             send_alert(DPRPBuildID, "dprp_build_id")
@@ -161,7 +182,9 @@ def gc():
 
 
 def gv_updater():
-    while True:
+    timeout = 1800
+    timeout_start = time.time()
+    while time.time() < timeout_start + timeout:
         try:
             data = gv.get_gameVer()
 
@@ -172,15 +195,22 @@ def gv_updater():
 
         cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
 
-        if data["client_version"] != cacheFile["client_version"]:
+        if data["csgo_client_version"] != cacheFile["csgo_client_version"]:
             for key, value in data.items():
                 for cachedKey, cachedValue in cacheFile.items():
                     if key == cachedKey:
                         if value != cachedValue:
                             file_manager.updateJson(config.CACHE_FILE_PATH, value, key)
-            sys.exit()
+
+        if data["cs2_client_version"] != cacheFile["cs2_client_version"]:
+            for key, value in data.items():
+                for cachedKey, cachedValue in cacheFile.items():
+                    if key == cachedKey:
+                        if value != cachedValue:
+                            file_manager.updateJson(config.CACHE_FILE_PATH, value, key)
 
         time.sleep(45)
+    sys.exit()
 
 def online_players():
     while True:
@@ -210,6 +240,10 @@ def send_alert(newVal, key):
         text = notifications.dsBuild.format(newVal)
     elif key == "valve_ds_changenumber":
         text = notifications.valveDS.format(newVal)
+    elif key == "cs2_app_changenumber":
+        text = notifications.cs2App.format(newVal)
+    elif key == "cs2_server_changenumber":
+        text = notifications.cs2Server.format(newVal)
 
     if not config.TEST_MODE:
         chat_list = [config.INCS2CHAT, config.CSTRACKER]

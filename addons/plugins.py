@@ -14,23 +14,28 @@ tz_valve = pytz.timezone("America/Los_Angeles")
 def time_converter():
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
     if cacheFile["api_timestamp"] == 'unknown':
-        steam_server_time = vdCache = tsVCache = 'unknown'
-        tsRCache = vdRCache = tsVRCache = 'неизвестно'
+        steam_server_time = csgoVDCache = cs2VDCache = tsVCache = 'unknown'
+        tsRCache = csgoVDRCache = cs2VDRCache = tsVRCache = 'неизвестно'
     else:
         steam_server_time = datetime.fromtimestamp(cacheFile["api_timestamp"], tz=tz).strftime("%H:%M:%S, %d %b %Z")
         temp1 = steam_server_time.rsplit(" ", 1)[0]
         tsRCache = f'{format_datetime(datetime.strptime(temp1, "%H:%M:%S, %d %b"), "HH:mm:ss, dd MMM", locale="ru",).title()} ({steam_server_time.split()[-1]})'
 
-        version_date = cacheFile["version_timestamp"]
-        vdCache = (datetime.fromtimestamp(version_date, tz=tz) + timedelta(hours=8)).strftime("%H:%M:%S, %d %b %Z")
-        temp2 = vdCache.rsplit(" ", 1)[0]
-        vdRCache = f'{format_datetime(datetime.strptime(temp2, "%H:%M:%S, %d %b"), "HH:mm:ss, dd MMM", locale="ru",).title()} ({vdCache.split()[-1]})'
+        csgo_version_date = cacheFile["csgo_version_timestamp"]
+        csgoVDCache = (datetime.fromtimestamp(csgo_version_date, tz=tz) + timedelta(hours=8)).strftime("%H:%M:%S, %d %b %Z")
+        temp2 = csgoVDCache.rsplit(" ", 1)[0]
+        csgoVDRCache = f'{format_datetime(datetime.strptime(temp2, "%H:%M:%S, %d %b"), "HH:mm:ss, dd MMM", locale="ru",).title()} ({csgoVDCache.split()[-1]})'
+
+        cs2_version_date = cacheFile["cs2_version_timestamp"]
+        cs2VDCache = (datetime.fromtimestamp(cs2_version_date, tz=tz) + timedelta(hours=8)).strftime("%H:%M:%S, %d %b %Z")
+        temp2 = cs2VDCache.rsplit(" ", 1)[0]
+        cs2VDRCache = f'{format_datetime(datetime.strptime(temp2, "%H:%M:%S, %d %b"), "HH:mm:ss, dd MMM", locale="ru",).title()} ({cs2VDCache.split()[-1]})'
 
         tsVCache = datetime.now(tz=tz_valve).strftime("%H:%M:%S, %d %b %Z")
         temp3 = tsVCache.rsplit(" ", 1)[0]
         tsVRCache = f'{format_datetime(datetime.strptime(temp3, "%H:%M:%S, %d %b"), "HH:mm:ss, dd MMM", locale="ru",).title()} ({tsVCache.split()[-1]})'
 
-    return steam_server_time, tsRCache, vdCache, vdRCache, tsVCache, tsVRCache
+    return steam_server_time, tsRCache, csgoVDCache, csgoVDRCache, tsVCache, tsVRCache, cs2VDCache, cs2VDRCache
 
 
 def translate(data):

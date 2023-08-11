@@ -6,7 +6,8 @@ import requests
 from bs4 import BeautifulSoup
 
 monthly_api = "https://api.steampowered.com/ICSGOServers_730/GetMonthlyPlayerCount/v1"
-url_github = "https://raw.githubusercontent.com/SteamDatabase/GameTracking-CSGO/master/csgo/steam.inf"
+csgo_url_github = "https://raw.githubusercontent.com/SteamDatabase/GameTracking-CSGO/master/csgo/steam.inf"
+cs2_url_github = "https://raw.githubusercontent.com/SteamDatabase/GameTracking-CSGO/master/game/csgo/steam.inf"
 asset_api = f"https://api.steampowered.com/ISteamEconomy/GetAssetPrices/v1/?appid={config.CSGO_APP_ID}&key={config.STEAM_API_KEY}"
 headers = {
     "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0"
@@ -27,14 +28,18 @@ class Monthly:
 class GameVersion:
     def get_gameVer(self):
         dataset = {
-            "client_version": "unknown",
-            "server_version": "unknown",
-            "patch_version": "unknown",
-            "version_timestamp": "unknown",
+            "csgo_client_version": "unknown",
+            "csgo_server_version": "unknown",
+            "csgo_patch_version": "unknown",
+            "csgo_version_timestamp": "unknown",
+            "cs2_client_version": "unknown",
+            "cs2_server_version": "unknown",
+            "cs2_patch_version": "unknown",
+            "cs2_version_timestamp": "unknown",
         }
         try:
             soup = BeautifulSoup(
-                requests.get(url_github, headers=headers, timeout=15).content,
+                requests.get(csgo_url_github, headers=headers, timeout=15).content,
                 "html.parser",
             )
 
@@ -48,12 +53,35 @@ class GameVersion:
 
             dt = f'{options["VersionDate"]} {options["VersionTime"]}'
 
-            dataset["client_version"] = int(options["ClientVersion"])
-            dataset["server_version"] = int(options["ServerVersion"])
-            dataset["patch_version"] = options["PatchVersion"]
-            dataset["version_timestamp"] = datetime.strptime(
+            dataset["csgo_client_version"] = int(options["ClientVersion"])
+            dataset["csgo_server_version"] = int(options["ServerVersion"])
+            dataset["csgo_patch_version"] = options["PatchVersion"]
+            dataset["csgo_version_timestamp"] = datetime.strptime(
                 dt, "%b %d %Y %H:%M:%S"
             ).timestamp()
+
+            soup = BeautifulSoup(
+                requests.get(cs2_url_github, headers=headers, timeout=15).content,
+                "html.parser",
+            )
+
+            data = soup.get_text()
+            options = {}
+            config_entries = re.split("\n|=", data)
+
+            for key, value in zip(config_entries[0::2], config_entries[1::2]):
+                cleaned_key = key.replace("[", "").replace("]", "")
+                options[cleaned_key] = value
+
+            dt = f'{options["VersionDate"]} {options["VersionTime"]}'
+
+            dataset["cs2_client_version"] = int(options["ClientVersion"]) - 2000000
+            dataset["cs2_server_version"] = int(options["ServerVersion"]) - 2000000
+            dataset["cs2_patch_version"] = options["PatchVersion"]
+            dataset["cs2_version_timestamp"] = datetime.strptime(
+                dt, "%b %d %Y %H:%M:%S"
+            ).timestamp()
+
 
             return dataset
         except:

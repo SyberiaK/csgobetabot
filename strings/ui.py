@@ -107,23 +107,32 @@ timer_ru = "⏳ Время до сброса ограничений опыта �
 
 ### Text for Game Version
 # English
-gameversion_en = """⚙️ Current game version: <code>{}</code> <code>({})</code>
+gameversion_en = """⚙️ Current game version:
 
-Latest Counter-Strike update: {}"""
+CS:GO: <code>{}</code> <code>({})</code>
+Latest update: {}
+
+CS2: <code>{}</code> <code>({})</code>
+Latest update: {}"""
 
 # Russian
-gameversion_ru = """⚙️ Текущая версия игры: <code>{}</code> <code>({})</code>
+gameversion_ru = """⚙️ Текущая версия игры:
 
-Последнее обновление Counter-Strike: {}
+CS:GO: <code>{}</code> <code>({})</code>
+Последнее обновление: {}
+
+CS2: <code>{}</code> <code>({})</code>
+Последнее обновление: {}
 
 ℹ️ Трекер обновлений Counter-Strike: <a href="http://t.me/cstracker/7">@cstracker</a>"""
 
 
 ### URL examples
 # English
-url_ex_en = """📖 Please, enter one of the following options:
+url_ex_en = """🔗 Please, enter one of the following options:
         
-• Profile URL (ex: <code>https://steamcommunity.com/id/aquaismissing</code> or <code>https://steamcommunity.com/profiles/76561198346163255</code>)
+• Profile link (ex: <code>https://steamcommunity.com/id/aquaismissing</code>)
+• Profile permalink (ex: <code>https://steamcommunity.com/profiles/76561198346163255</code>)
 • SteamID (ex: <code>76561198346163255</code>)
 • Custom URL (ex: <code>aquaismissing</code>)
 
@@ -132,7 +141,8 @@ Use /cancel to cancel this command."""
 # Russian
 url_ex_ru = """🔗 Пожалуйста, введите один из следующих вариантов:
 
-• Ссылка на профиль (напр.: <code>https://steamcommunity.com/id/aquaismissing</code> или <code>https://steamcommunity.com/profiles/76561198346163255</code>)
+• Ссылка на профиль (напр.: <code>https://steamcommunity.com/id/aquaismissing</code>)
+• Перманентная ссылка на профиль (напр.: <code>https://steamcommunity.com/profiles/76561198346163255</code>)
 • SteamID (напр.: <code>76561198346163255</code>)
 • Личная ссылка (напр.: <code>aquaismissing</code>)
 

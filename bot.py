@@ -1300,12 +1300,15 @@ def default_inline(inline_query):
         for data, tt, desc, thumb, inline_button in zip(
             data, titles, descriptions, thumbs, markup
         ):
+            preview = False
+            if data == gameversion_text_ru:
+                preview = True
             results.append(
                 telebot.types.InlineQueryResultArticle(
                     random.randint(0, 9999),
                     tt,
                     input_message_content=telebot.types.InputTextMessageContent(
-                        data, parse_mode="html", disable_web_page_preview=True
+                        data, parse_mode="html", disable_web_page_preview=preview
                     ),
                     thumb_url=thumb,
                     description=desc,

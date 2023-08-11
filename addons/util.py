@@ -173,14 +173,16 @@ def timer():
 
 def gameversion():
     """Get the version of the game"""
-    vdCache, vdRCache = time_converter()[2], time_converter()[3]
+    csgoVDCache, csgoVDRCache, cs2VDCache, cs2VDRCache = time_converter()[2], time_converter()[3], time_converter()[6], time_converter()[7]
     cacheFile = file_manager.readJson(config.CACHE_FILE_PATH)
-    cvCache, pvCache = (
-        cacheFile["client_version"],
-        cacheFile["patch_version"],
+    csgoclientCache, csgopatchCache, cs2clientCache, cs2patchCache = (
+        cacheFile["csgo_client_version"],
+        cacheFile["csgo_patch_version"],
+        cacheFile["cs2_client_version"],
+        cacheFile["cs2_patch_version"],
     )
-    gameversion_text_en = ui.gameversion_en.format(pvCache, cvCache, vdCache)
-    gameversion_text_ru = ui.gameversion_ru.format(pvCache, cvCache, vdRCache)
+    gameversion_text_en = ui.gameversion_en.format(csgopatchCache, csgoclientCache, csgoVDCache, cs2patchCache, cs2clientCache, cs2VDCache)
+    gameversion_text_ru = ui.gameversion_ru.format(csgopatchCache, csgoclientCache, csgoVDRCache, cs2patchCache, cs2clientCache, cs2VDRCache)
     return gameversion_text_en, gameversion_text_ru
 
 
